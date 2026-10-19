@@ -4,6 +4,8 @@
 
 ## 打开
 
+手机在线入口：**https://niklausyu99.github.io/Cooking/**。2026-10-19 已部署并核对线上文件与生产构建一致；家庭数据需通过自己的专属链接连接。
+
 用支持 JavaScript 的浏览器打开 HTML。也可以在仓库目录运行一个静态服务器：
 
 ```bash
@@ -39,7 +41,7 @@ python3 -m http.server 4173 --bind 0.0.0.0
 
 本机模式保存在当前浏览器的 `localStorage`（键 `little-basket:v1`）。家庭模式使用专属链接，自动连接并共享清单、库存、余量、菜谱和完整购买历史；不需要家人注册、邮箱或密码。不同家庭的缓存隔离。
 
-首次部署、数据库初始化、家庭链接与 Free 配额见 [Supabase 设置说明](supabase/README.md)。公开 Project URL 与 Publishable key 在 `site-config.json`，不含家庭访问凭证。**这些配置就位不等于家庭同步已完成验收；公开网址还需等待 GitHub Pages 部署成功。**
+首次部署、数据库初始化、家庭链接与 Free 配额见 [Supabase 设置说明](supabase/README.md)。公开 Project URL 与 Publishable key 在 `site-config.json`，不含家庭访问凭证。**这些配置就位不等于家庭同步已完成验收；正式站点已部署；有效家庭链接的真实双设备读写仍由家庭设备验收。**
 
 应用打开后断网可先保存，恢复网络会补传。家人同时修改时先确认保留哪份，不静默覆盖；JSON 备份继续用于恢复误操作和迁移，不包含家庭连接码。导入会先验证并确认替换，已连接时也会同步给家人。换设备前确认「已同步」，或先导出备份。
 
@@ -66,4 +68,4 @@ python3 scripts/verify_design_capabilities.py
 node .agents/skills/design-taste-frontend/scripts/lint.mjs --app little-basket.html
 ```
 
-浏览器测试覆盖 320–1440 px、库存与清单独立重置、历史、提醒、滑块、菜谱合并、配方切换、备份恢复、旧数据迁移、保存保护及无外部资源依赖。测试输出写在忽略的 `.test-results/` 中。应用本身不依赖这些测试工具。同步测试使用 RPC 替身，真实数据库、实际手机和线上部署须另行验收。
+浏览器测试覆盖 320–1440 px、库存与清单独立重置、历史、提醒、滑块、菜谱合并、配方切换、备份恢复、旧数据迁移、保存保护及无外部资源依赖。测试输出写在忽略的 `.test-results/` 中。应用本身不依赖这些测试工具。同步测试使用 RPC 替身，线上 HTTPS 已返回 200，内容与当前构建逐字节一致；真实无效链接 RPC 拒绝已验证。有效家庭链接的真实双设备同步、实际 iPhone／Safari 尚未验收。此环境 Chromium 直连线上站点因代理 CA 信任报错，未绕过 TLS 校验；手机尺寸交互在本机服务完成验证。
