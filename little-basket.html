@@ -72,9 +72,20 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 
 /* Quiet sorting below the categories: small text, with a full touch target. */
 .market-tools{flex-direction:column;align-items:flex-start;gap:0;margin-bottom:9px}.market-tools .market-filters{width:100%;flex:none}
-.market-sort-control{border:0;background:transparent;border-radius:0;min-width:0;color:var(--muted);margin-left:2px}
-.market-sort-control select{height:44px;font-size:13px;padding:8px 23px 8px 0;border-radius:0;width:auto;min-width:92px}
-.market-sort-control>.icon{right:1px;width:14px;height:14px}
+.market-sort-control{position:relative;width:100%;border:0;background:transparent;color:var(--muted);margin-left:0;z-index:6}
+#market-sort{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;min-height:44px;width:96px;padding:8px 2px;font-size:13px;color:var(--muted);border-radius:8px}
+#market-sort>.icon{width:14px;height:14px;transition:transform .18s ease;transform:rotate(-90deg)}
+.market-sort-control.is-open #market-sort{color:var(--olive)}
+.market-sort-control.is-open #market-sort>.icon{transform:rotate(90deg)}
+.market-sort-options{position:absolute;left:100px;top:0;width:min(280px,calc(100% - 100px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:5px;background:var(--white);border:1px solid #c8d2b8;border-radius:14px;box-shadow:0 8px 24px #29372812;opacity:0;visibility:hidden;transform:translateX(-8px);pointer-events:none;transition:opacity .16s ease,transform .18s ease,visibility .18s}
+.market-sort-control.is-open .market-sort-options{opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto}
+.sort-option{display:flex;align-items:center;justify-content:space-between;gap:3px;min-height:44px;min-width:0;padding:8px;border-radius:9px;font-size:13px;text-align:left;white-space:nowrap;color:var(--muted)}
+.sort-option .icon{width:13px;height:13px;flex-shrink:0;opacity:0}
+.sort-option[aria-checked="true"]{color:var(--olive);background:var(--pale);font-weight:650}
+.sort-option[aria-checked="true"] .icon{opacity:1}
+.sort-option:hover{background:var(--pale);color:var(--olive)}
+.sort-option:focus-visible{outline:2px solid var(--olive);outline-offset:-2px;background:var(--pale)}
+@media(max-width:350px){.market-sort-options{left:90px;width:calc(100% - 90px);padding:4px}.sort-option{padding:7px 5px}#market-sort{width:86px;gap:5px}}
 /* Remaining levels follow the hand continuously from muted brick to leaf green. */
 .inventory-card[style] .inventory-amount{color:var(--level-color);font-weight:var(--level-weight);font-size:22px;transition:color 80ms linear,font-weight 80ms linear}
 .inventory-card[style] .range-fill{background:var(--level-color);transition:background-color 80ms linear}
@@ -184,7 +195,7 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 <div class="workspace">
  <main class="content" id="main" tabindex="-1">
   <nav class="desktop-tabs" aria-label="主要导航"><button class="tab" data-action="view" data-view="market"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>选购食材</button><button class="tab active" data-action="view" data-view="recipes"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>我的菜谱</button><button class="tab" data-action="view" data-view="shopping"><svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg>买菜清单<span class="count list-count">0</span></button><button class="tab" data-action="view" data-view="pantry"><svg class="icon" aria-hidden="true"><use href="#i-pantry"/></svg>小厨房</button></nav>
-  <section id="market-view" aria-labelledby="market-heading"><div class="section-head"><div><h1 id="market-heading">今天要补什么？</h1><p class="subtle" style="margin-top:5px">点一样入单，相同食材只记一行。</p></div><button class="button secondary" data-action="add-item"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>加新东西</button></div><label class="search market-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索选购食材</span><input id="market-search" type="search" placeholder="找食材、酱料、日用品" autocomplete="off"></label><div class="market-tools"><div class="market-filters" role="group" aria-label="选购分类" id="market-filters"></div><label class="sort-control market-sort-control"><span class="sr-only">选购排序</span><select id="market-sort" aria-label="选购排序"><option value="category">默认分类</option><option value="name">名称排序</option><option value="recent">最近购买</option><option value="pantry">常备优先</option></select><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></label></div><div id="market-content"></div></section>
+  <section id="market-view" aria-labelledby="market-heading"><div class="section-head"><div><h1 id="market-heading">今天要补什么？</h1><p class="subtle" style="margin-top:5px">点一样入单，相同食材只记一行。</p></div><button class="button secondary" data-action="add-item"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>加新东西</button></div><label class="search market-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索选购食材</span><input id="market-search" type="search" placeholder="找食材、酱料、日用品" autocomplete="off"></label><div class="market-tools"><div class="market-filters" role="group" aria-label="选购分类" id="market-filters"></div><div class="market-sort-control"><button id="market-sort" type="button" aria-label="选购排序：默认分类" aria-haspopup="menu" aria-expanded="false" aria-controls="market-sort-options"><span id="market-sort-label">默认分类</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button><div id="market-sort-options" class="market-sort-options" role="menu" aria-label="选购排序" aria-hidden="true" inert><button class="sort-option" type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-sort-option="category">默认分类<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="name">名称排序<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="recent">最近购买<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="pantry">常备优先<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button></div></div></div><div id="market-content"></div></section>
   <section id="recipes-view" aria-labelledby="recipes-heading" hidden>
    <div class="section-head"><div><h2 id="recipes-heading">我的菜谱</h2><p class="subtle" id="recipe-count" style="margin-top:4px"></p></div><button class="button secondary" id="add-recipe-button" data-action="new-recipe"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>添加菜谱</span></button></div>
    <div class="filters"><div class="chips" role="group" aria-label="菜谱分类"><button class="chip active" data-action="filter" data-filter="all" aria-pressed="true">全部</button><button class="chip" data-action="filter" data-filter="dish" aria-pressed="false">家常菜</button><button class="chip" data-action="filter" data-filter="soup" aria-pressed="false">煲汤</button><button class="chip" data-action="filter" data-filter="learning" aria-pressed="false">在学的</button></div><label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索菜名或食材</span><input id="recipe-search" type="search" placeholder="搜菜名、食材" autocomplete="off"></label></div>
@@ -752,7 +763,9 @@ function checkDailyReset(){
  }return false;
 }
 function renderMarket(){
- $('#market-sort').value=marketSort;
+ const sortLabel=({category:'默认分类',name:'名称排序',recent:'最近购买',pantry:'常备优先'})[marketSort];
+ $('#market-sort-label').textContent=sortLabel;$('#market-sort').setAttribute('aria-label','选购排序：'+sortLabel);
+ $$('[data-sort-option]').forEach(button=>button.setAttribute('aria-checked',String(button.dataset.sortOption===marketSort)));
  const cart=new Set(groceryData().list.map(e=>e.id));
  $('#market-filters').innerHTML=[['all','全部'],...CATEGORIES.map(([id,label])=>[id,({produce:'蔬果',protein:'肉蛋',dry:'干货',seasoning:'调味',snacks:'冲饮零食',other:'日用'})[id]])].map(([id,label])=>`<button class="market-chip ${marketCategory===id?'active':''}" data-action="market-filter" data-category="${id}" aria-pressed="${marketCategory===id}">${label}</button>`).join('');
  const items=state.ingredients.filter(i=>(marketCategory==='all'||i.category===marketCategory)&&(!marketSearch||[i.name,...i.aliases].join(' ').toLowerCase().includes(marketSearch.toLowerCase())));
@@ -800,7 +813,41 @@ function renderHistory(){
  }).join('');
 }
 $('#item-category').addEventListener('change',event=>{if(!findIngredient($('#item-name').value))$('#item-lasting').checked=event.target.value==='seasoning';updateItemMode();});
-$('#market-sort').addEventListener('change',event=>{marketSort=event.target.value;saveViewPreferences();renderMarket();});
+function closeMarketSort(restoreFocus=false){
+ const control=$('.market-sort-control'),menu=$('#market-sort-options');
+ if($('#market-sort').getAttribute('aria-expanded')!=='true')return;
+ control.classList.remove('is-open');$('#market-sort').setAttribute('aria-expanded','false');
+ menu.inert=true;menu.setAttribute('aria-hidden','true');
+ if(restoreFocus)$('#market-sort').focus({preventScroll:true});
+}
+function openMarketSort(){
+ const menu=$('#market-sort-options');
+ menu.inert=false;menu.setAttribute('aria-hidden','false');
+ $('.market-sort-control').classList.add('is-open');$('#market-sort').setAttribute('aria-expanded','true');
+ $('[data-sort-option="'+marketSort+'"]',menu).focus({preventScroll:true});
+}
+$('#market-sort').addEventListener('click',()=>{
+ if($('#market-sort').getAttribute('aria-expanded')==='true')closeMarketSort(true);else openMarketSort();
+});
+$('#market-sort-options').addEventListener('click',event=>{
+ const option=event.target.closest('[data-sort-option]');if(!option)return;
+ marketSort=option.dataset.sortOption;saveViewPreferences();renderMarket();closeMarketSort(true);
+});
+$('.market-sort-control').addEventListener('keydown',event=>{
+ if(event.key==='Escape'){if($('#market-sort').getAttribute('aria-expanded')==='true'){event.preventDefault();event.stopPropagation();closeMarketSort(true);}return;}
+ if(event.target.id==='market-sort'&&['ArrowRight','ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();openMarketSort();return;}
+ if(!event.target.matches('[data-sort-option]'))return;
+ const options=$$('[data-sort-option]',$('#market-sort-options')),index=options.indexOf(event.target);
+ let next=index;
+ if(['ArrowRight','ArrowDown'].includes(event.key))next=(index+1)%options.length;
+ else if(['ArrowLeft','ArrowUp'].includes(event.key))next=(index+options.length-1)%options.length;
+ else if(event.key==='Home')next=0;
+ else if(event.key==='End')next=options.length-1;
+ else return;
+ event.preventDefault();options[next].focus({preventScroll:true});
+});
+$('.market-sort-control').addEventListener('focusout',event=>{if(!event.currentTarget.contains(event.relatedTarget))closeMarketSort();});
+document.addEventListener('pointerdown',event=>{if(!event.target.closest('.market-sort-control'))closeMarketSort();});
  document.addEventListener('change',event=>{if(event.target.id==='history-sort'){historySort=event.target.value;saveViewPreferences();renderHistory();$('#history-sort').focus({preventScroll:true});}});
  $('#market-search').addEventListener('input',event=>{marketSearch=event.target.value.trim();renderMarket();});
 $('#pantry-content').addEventListener('input',event=>{
