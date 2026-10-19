@@ -426,8 +426,9 @@ class BasketTests(unittest.TestCase):
         self.page.get_by_role('button', name='加一样', exact=True).click()
         self.page.locator('#item-name').fill('西红柿')
         expect(self.page.locator('#item-suggestions')).to_be_visible()
-        self.assertEqual(self.page.locator('#item-suggestions [role=option]').count(), 1)
-        self.assertEqual(self.page.locator('#item-suggestions svg').count(), 1)
+        self.assertEqual(self.page.locator('#item-suggestions [role=option]').count(), 2)
+        expect(self.page.locator('#item-suggestions [role=option]').first).to_contain_text('番茄')
+        self.assertEqual(self.page.locator('#item-suggestions svg').count(), 2)
         self.page.locator('#item-name').press('ArrowDown')
         self.page.locator('#item-name').press('Enter')
         expect(self.page.locator('#item-name')).to_have_value('番茄')
@@ -507,6 +508,134 @@ class BasketTests(unittest.TestCase):
         self.assertEqual(self.saved()['recipes'][0]['source'], 'https://example.com/old-note')
         saved['recipes'][0]['sources'] = ['javascript:alert(1)']
         self.assertTrue(self.page.evaluate('(value)=>{try{validateState(value);return false;}catch{return true;}}', saved))
+
+    def test_28_create_learning_recipe_and_edit_after_reload(self):
+        self.page.locator('[data-action=filter][data-filter=learning]').click()
+        self.page.locator('#add-recipe-button').click()
+        expect(self.page.locator('#edit-learning')).to_be_checked()
+        self.page.locator('#edit-title').fill('燕麦早餐')
+        self.page.locator('.ing-name').first.fill('燕麦片')
+        self.page.locator('#edit-steps').fill('加水煮软。\n按口味调节。')
+        self.page.locator('#recipe-form button[type=submit]').click()
+        r = next(r for r in self.saved()['recipes'] if r['title'] == '燕麦早餐')
+        self.assertTrue(r['learning'])
+        self.assertEqual(r['ingredients'][0]['id'], 'oats')
+        self.page.reload()
+        self.page.locator(f'[data-recipe="{r["id"]}"] .recipe-title').click()
+        self.page.locator('#detail-body [data-action=edit-recipe]').click()
+        self.page.locator('#edit-steps').fill('先泡软再煮。')
+        self.page.locator('#recipe-form button[type=submit]').click()
+        self.assertEqual(next(x for x in self.saved()['recipes'] if x['id'] == r['id'])['steps'], ['先泡软再煮。'])
+
+    def test_29_catalog_aliases_and_compact_market_sort(self):
+        self.tab('market')
+        self.assertEqual(self.page.locator('[data-market-id=cream-crackers] h3').inner_text(), '梳打饼')
+        for key in ['blueberry', 'grape', 'apple', 'pineapple', 'banana', 'strawberry', 'cherry-tomato', 'milo', 'oats', 'protein-powder']:
+            self.assertEqual(self.page.locator(f'[data-market-id="{key}"]').count(), 1)
+        self.assertEqual(self.page.evaluate("findIngredient('Hup Seng Cream Crackers').id"), 'cream-crackers')
+        self.assertEqual(self.page.evaluate("findIngredient('小西红柿子').id"), 'cherry-tomato')
+        self.page.evaluate("state.history.push({id:'sort-buy',ingredientId:'banana',boughtAt:new Date().toISOString()});renderMarket()")
+        self.page.locator('#market-sort').select_option('recent')
+        self.assertEqual(self.page.locator('.market-card').first.get_attribute('data-market-id'), 'banana')
+        self.page.locator('#market-sort').select_option('pantry')
+        first_id = self.page.locator('.market-card').first.get_attribute('data-market-id')
+        self.assertTrue(self.page.evaluate('(id)=>ingredient(id).pantry', first_id))
+        # View preferences persist on this device without going into shared family data.
+        self.page.reload()
+        self.tab('market')
+        expect(self.page.locator('#market-sort')).to_have_value('pantry')
+        boxes = self.page.evaluate("[document.querySelector('#market-filters'),document.querySelector('.market-sort-control'),document.querySelector('#market-content')].map(x=>x.getBoundingClientRect().toJSON())")
+        self.assertGreaterEqual(boxes[1]['top'], boxes[0]['bottom'])
+        self.assertGreaterEqual(boxes[2]['top'], boxes[1]['bottom'])
+        self.assertEqual(self.page.locator('.market-sort-control').evaluate('(x)=>getComputedStyle(x).borderTopWidth'), '0px')
+
+    def test_30_continuous_levels_persist_without_duplicate_percentage(self):
+        self.tab('pantry')
+        for key in ['oats', 'protein-powder', 'milo', 'rice', 'oil']:
+            expect(self.page.locator(f'#level-{key}')).to_be_visible()
+        card = self.page.locator('[data-pantry-id=soy]')
+        slider = card.locator('input[type=range]')
+        colors = []
+        for value in [0, 1, 25, 50, 75, 99, 100]:
+            slider.fill(str(value))
+            colors.append(card.evaluate("x=>getComputedStyle(x).getPropertyValue('--level-color')"))
+            expect(card.locator('.inventory-amount')).to_have_text(f'{value}%')
+        self.assertEqual(len(set(colors)), 7)
+        self.assertEqual(card.locator('output').count(), 0)
+        slider.fill('13')
+        self.page.evaluate('startNewTrip()')
+        self.page.reload()
+        self.tab('pantry')
+        expect(self.page.locator('#level-soy')).to_have_value('13')
+        self.assertEqual(self.saved()['history'], [])
+        self.assertIn('soy', self.saved()['stock'])
+
+    def test_31_fresh_stock_two_explicit_buttons(self):
+        self.tab('pantry')
+        self.page.locator('[data-kitchen=fresh]').click()
+        card = self.page.locator('[data-pantry-id=egg]')
+        self.assertEqual(card.locator('.stock-choice').count(), 2)
+        card.locator('[data-available=true]').click()
+        card.locator('[data-available=true]').click()
+        expect(card.locator('.inventory-amount')).to_have_text('还有')
+        self.assertIn('egg', self.saved()['stock'])
+        card.locator('[data-available=false]').click()
+        expect(card.locator('.inventory-amount')).to_have_text('已用完')
+        self.assertNotIn('egg', self.saved()['stock'])
+        self.assertEqual(self.saved()['history'], [])
+        self.assertEqual(len(self.saved()['stockEdits']), 1)
+
+    def test_32_history_delete_undo_recipe_purchase_and_later_stock_edit(self):
+        self.select('tomato-egg')
+        self.tab('shopping')
+        self.page.locator('[data-grocery=tomato] .purchase-check').click()
+        purchase = self.saved()['history'][0]['id']
+        self.tab('pantry')
+        self.page.locator('[data-kitchen=history]').click()
+        self.page.locator(f'[data-purchase-id="{purchase}"] .history-delete').click()
+        self.page.locator('#confirm-button').click()
+        self.assertEqual(self.saved()['history'], [])
+        self.assertNotIn('tomato', self.saved()['checked'])
+        self.assertNotIn('tomato', self.saved()['stock'])
+        self.page.locator('#toast-undo').click()
+        self.assertIn('tomato', self.saved()['checked'])
+        self.assertIn('tomato', self.saved()['stock'])
+        self.assertEqual(len(self.saved()['checkLinks']), 1)
+        # A deliberate stock correction after purchase wins over deleting the receipt.
+        self.page.evaluate("setInventoryStock('tomato',false)")
+        self.page.locator(f'[data-purchase-id="{purchase}"] .history-delete').click()
+        self.page.locator('#confirm-button').click()
+        self.assertNotIn('tomato', self.saved()['stock'])
+        self.assertEqual(self.saved()['history'], [])
+
+    def test_33_history_sort_and_old_receipt_does_not_change_current_levels(self):
+        self.page.evaluate("""()=>{addManual('soy');persist();togglePurchase('soy');startNewTrip();setLevel('soy',37);persist();
+          const p=state.history[0];state.history.push({...p,id:'older',boughtAt:new Date(Date.now()-86400000).toISOString()});persist();render();}""")
+        self.tab('pantry')
+        self.page.locator('[data-kitchen=history]').click()
+        self.page.locator('#history-sort').select_option('oldest')
+        self.assertEqual(self.page.locator('.history-row').first.get_attribute('data-purchase-id'), 'older')
+        self.page.locator('.history-row').first.locator('.history-delete').click()
+        self.page.locator('#confirm-button').click()
+        self.assertEqual(next(x['percent'] for x in self.saved()['levels'] if x['id'] == 'soy'), 37)
+        self.assertIn('soy', self.saved()['stock'])
+        self.assertEqual(len(self.saved()['history']), 1)
+
+    def test_34_food_assets_are_padded_and_not_stored_in_family_data(self):
+        from PIL import Image
+        manifest = json.loads((ROOT / 'assets/illustrations/manifest.json').read_text())
+        self.assertEqual(len(manifest['assets']), 54)
+        for asset in manifest['assets']:
+            image = Image.open(ROOT / asset['file']).convert('RGBA')
+            box = image.getchannel('A').getbbox()
+            self.assertIsNotNone(box)
+            self.assertGreater(box[0], image.width * .075)
+            self.assertGreater(box[1], image.height * .075)
+            self.assertLess(box[2], image.width * .925)
+            self.assertLess(box[3], image.height * .925)
+        self.assertNotIn('data:image', json.dumps(self.saved()))
+        self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 54)
+
 
 
 if __name__ == '__main__':

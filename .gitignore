@@ -3,3 +3,4 @@ __pycache__/
 dist/
 .env
 .env.local
+assets/illustrations/embedded-definitions.txt

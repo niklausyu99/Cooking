@@ -18,7 +18,7 @@ This is a project-specific skill written for this repository. It is not a copied
 
 - Rice-white background, olive-green actions, ink-green text, muted terracotta accents.
 - Use roomy ingredient illustrations, clear Chinese labels, subtle rules, and restrained shadows. Avoid dense text, gratuitous gradients, or unrelated stock imagery.
-- Use consistent inline SVG icons; food emoji supplement labels rather than replace them.
+- Use simple inline SVG for UI controls and the approved soft 2D anime food illustrations for ingredients and dishes; keep complete silhouettes and crop padding.
 - Let recipes lead to groceries in one tap. Keep advanced recipe instructions and data management behind intentional actions.
 
 ## Mobile UX
@@ -29,7 +29,7 @@ This is a project-specific skill written for this repository. It is not a copied
 - Merge shared ingredient identities. 排骨 and 煲汤骨 are interchangeable here. Do not add 山药汤.
 - State serving assumptions. Do not silently invent the user's preferences or cupboard contents.
 - Preserve user-provided recipes. Label supplementary cooking guidance as reference material.
-- Keep new recipes maintained through conversation and built-in source data. Preserve readable methods, local method editing, and offline backups.
+- Allow recipe creation and editing in the app, including the learning filter; conversation updates can also maintain built-in source data. Preserve readable methods, local method editing, and offline backups.
 - Keep each shopping trip separate from persistent stock levels and dated purchase history. Resetting a trip must never reset either.
 - Long-lasting supplies use manual remaining-level sliders. Recipe selection never invents consumption. Recent purchases need a clear confirmation before buying again.
 

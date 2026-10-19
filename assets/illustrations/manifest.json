@@ -1,0 +1,1253 @@
+{
+  "format": "WebP with alpha",
+  "quality": {
+    "dish": 90,
+    "ingredient": 92
+  },
+  "assets": [
+    {
+      "id": "food-dish-tomato-egg",
+      "key": "tomato-egg",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/tomato-egg.webp",
+      "source": "assets/illustrations/source/dishes-01.png",
+      "source_crop": [
+        70,
+        74,
+        746,
+        483
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        672,
+        407
+      ],
+      "bytes": 70660,
+      "sha256": "d3d036e6209486666551ed8d9371d6da0c0512cde6216b60210394b9765d19b0"
+    },
+    {
+      "id": "food-dish-sweet-leaves",
+      "key": "sweet-leaves",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/sweet-leaves.webp",
+      "source": "assets/illustrations/source/dishes-01.png",
+      "source_crop": [
+        809,
+        76,
+        1466,
+        487
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        657,
+        411
+      ],
+      "bytes": 83910,
+      "sha256": "a75d3adcb683a64ca8f4a11d854a69af468d2fd3f7d64d5a7b543ba560369999"
+    },
+    {
+      "id": "food-dish-pea-shoots",
+      "key": "pea-shoots",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/pea-shoots.webp",
+      "source": "assets/illustrations/source/dishes-01.png",
+      "source_crop": [
+        61,
+        532,
+        740,
+        960
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        672,
+        424
+      ],
+      "bytes": 100796,
+      "sha256": "2c1820c42b4bff55d7e9f127fb7af5eb8a80c5c7372bf6c0aa5d7d798b8c7d91"
+    },
+    {
+      "id": "food-dish-mince-rice",
+      "key": "mince-rice",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/mince-rice.webp",
+      "source": "assets/illustrations/source/dishes-01.png",
+      "source_crop": [
+        803,
+        535,
+        1484,
+        958
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        672,
+        417
+      ],
+      "bytes": 88082,
+      "sha256": "10dc3477cb8d8be4d14e0566dd1f1bddf74e75c586f02dd7fa6257e6e1cd6681"
+    },
+    {
+      "id": "food-dish-potato-mince",
+      "key": "potato-mince",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/potato-mince.webp",
+      "source": "assets/illustrations/source/dishes-02.png",
+      "source_crop": [
+        120,
+        75,
+        725,
+        470
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        605,
+        395
+      ],
+      "bytes": 75180,
+      "sha256": "b220e7bf4405089cd6325bc49096109c08091c4b36b4a18840725a4457a4fd48"
+    },
+    {
+      "id": "food-dish-pork-stew",
+      "key": "pork-stew",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/pork-stew.webp",
+      "source": "assets/illustrations/source/dishes-02.png",
+      "source_crop": [
+        813,
+        70,
+        1435,
+        471
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        622,
+        401
+      ],
+      "bytes": 84612,
+      "sha256": "ecef44ce73d251dac9ed901c498668ead2c907f03b75345595f6bfc73123a88f"
+    },
+    {
+      "id": "food-dish-tomato-soup",
+      "key": "tomato-soup",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/tomato-soup.webp",
+      "source": "assets/illustrations/source/dishes-02.png",
+      "source_crop": [
+        152,
+        505,
+        690,
+        970
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        518,
+        448
+      ],
+      "bytes": 60930,
+      "sha256": "0600cf74c3c93f727db8fa93a962400d5028297b28fb0a3c7f1e10ff13bb1c3b"
+    },
+    {
+      "id": "food-dish-pickle-soup",
+      "key": "pickle-soup",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/pickle-soup.webp",
+      "source": "assets/illustrations/source/dishes-02.png",
+      "source_crop": [
+        848,
+        500,
+        1397,
+        970
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        523,
+        448
+      ],
+      "bytes": 70864,
+      "sha256": "cda5d8841063e4f5e35147a4c2d1efcdea526b20974a5834f24fe57ec01bc25a"
+    },
+    {
+      "id": "food-dish-lotus-soup",
+      "key": "lotus-soup",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/lotus-soup.webp",
+      "source": "assets/illustrations/source/dishes-03.png",
+      "source_crop": [
+        116,
+        70,
+        698,
+        502
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        582,
+        432
+      ],
+      "bytes": 60470,
+      "sha256": "19bb9538d5b3bcaf3762edbb6b5b5aab7f452fcd07f0b708d67f3ca1f65c16a2"
+    },
+    {
+      "id": "food-dish-radish-soup",
+      "key": "radish-soup",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/radish-soup.webp",
+      "source": "assets/illustrations/source/dishes-03.png",
+      "source_crop": [
+        848,
+        69,
+        1429,
+        502
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        581,
+        433
+      ],
+      "bytes": 58298,
+      "sha256": "6c2df02ccde1f752c79a76946d3bbe067b45e5a792b8b1944dbfe123ea7db26e"
+    },
+    {
+      "id": "food-dish-cress-soup",
+      "key": "cress-soup",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/cress-soup.webp",
+      "source": "assets/illustrations/source/dishes-03.png",
+      "source_crop": [
+        117,
+        537,
+        698,
+        974
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        581,
+        437
+      ],
+      "bytes": 75166,
+      "sha256": "6f80208a08d1cceccc1c7340085e9d52bd5f6ae4968a03213e2360cd497d9ee0"
+    },
+    {
+      "id": "food-dish-rice-bowl",
+      "key": "rice-bowl",
+      "kind": "dish",
+      "file": "assets/illustrations/dish/rice-bowl.webp",
+      "source": "assets/illustrations/source/dishes-03.png",
+      "source_crop": [
+        922,
+        579,
+        1354,
+        938
+      ],
+      "dimensions": [
+        960,
+        640
+      ],
+      "content_size": [
+        432,
+        359
+      ],
+      "bytes": 33150,
+      "sha256": "225f957e0affe867f2ec10b680f625407da5a1b0c5feb439f15adc0da4ad15ac"
+    },
+    {
+      "id": "food-ingredient-tomato",
+      "key": "tomato",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/tomato.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        46,
+        58,
+        377,
+        338
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        133
+      ],
+      "bytes": 10068,
+      "sha256": "21bf159f48dc346248bc10c61186c13f17fe4b5d21c93285867c24f4906613df"
+    },
+    {
+      "id": "food-ingredient-potato",
+      "key": "potato",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/potato.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        429,
+        79,
+        764,
+        325
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        115
+      ],
+      "bytes": 8612,
+      "sha256": "88d255fe9f407f6a55e62e8ea7f70abd2026f95ee5f56deabfaccc3369a44789"
+    },
+    {
+      "id": "food-ingredient-carrot",
+      "key": "carrot",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/carrot.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        819,
+        34,
+        1127,
+        345
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        155,
+        157
+      ],
+      "bytes": 10370,
+      "sha256": "1add4210067556497c72e2bcfec1e73f7da8d1b74947d507cb4252cf51d6e933"
+    },
+    {
+      "id": "food-ingredient-radish",
+      "key": "radish",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/radish.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        1177,
+        34,
+        1508,
+        345
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        148
+      ],
+      "bytes": 8852,
+      "sha256": "68af50661f8519452d1fde8d7cb052c64bcea8226f24df62a55370a8d92fee7a"
+    },
+    {
+      "id": "food-ingredient-cress",
+      "key": "cress",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/cress.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        47,
+        357,
+        383,
+        670
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        146
+      ],
+      "bytes": 15954,
+      "sha256": "73f957c51703e8d9f80090b0fd8edd8870c2c9df76182e3d5d08bb93920a1263"
+    },
+    {
+      "id": "food-ingredient-lotus",
+      "key": "lotus",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/lotus.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        427,
+        399,
+        767,
+        653
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        117
+      ],
+      "bytes": 9588,
+      "sha256": "a5e286c1449d396c6c87c35700fdcd70bf9470280be96b6a911de483fc61c274"
+    },
+    {
+      "id": "food-ingredient-sweet-leaves",
+      "key": "sweet-leaves",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/sweet-leaves.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        801,
+        368,
+        1148,
+        672
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        138
+      ],
+      "bytes": 13308,
+      "sha256": "c5062a0779d2b69b9c0c3cd4dd2f27decaa4c2a90c67f32a64ac6d14fd2319f7"
+    },
+    {
+      "id": "food-ingredient-pea-shoots",
+      "key": "pea-shoots",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/pea-shoots.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        1191,
+        353,
+        1505,
+        672
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        155,
+        157
+      ],
+      "bytes": 20290,
+      "sha256": "9250abe40e957a0002daa370e59c52e79501547b42b78641267cb90383a0b075"
+    },
+    {
+      "id": "food-ingredient-scallion",
+      "key": "scallion",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/scallion.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        39,
+        678,
+        388,
+        979
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        135
+      ],
+      "bytes": 7884,
+      "sha256": "293ea461837d376362ba428a38962df292b58e58c44cea9498ae7b974bdd7fff"
+    },
+    {
+      "id": "food-ingredient-ginger",
+      "key": "ginger",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/ginger.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        431,
+        699,
+        755,
+        955
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        124
+      ],
+      "bytes": 9746,
+      "sha256": "e712a4fe274b54c803d1bd00d95266efeead99dad459aa05690804501216b01f"
+    },
+    {
+      "id": "food-ingredient-garlic",
+      "key": "garlic",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/garlic.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        815,
+        725,
+        1109,
+        969
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        130
+      ],
+      "bytes": 8902,
+      "sha256": "a7fb6530cb2bfb73f0582577446ef25dc85beebe2f40351875517ce8fed9ee1b"
+    },
+    {
+      "id": "food-ingredient-egg",
+      "key": "egg",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/egg.webp",
+      "source": "assets/illustrations/source/ingredients-01.png",
+      "source_crop": [
+        1188,
+        712,
+        1498,
+        965
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        128
+      ],
+      "bytes": 6878,
+      "sha256": "8a5a48c692c95b2efc556fcc6a481565db313619464d78ff9046e9ab8b1bab50"
+    },
+    {
+      "id": "food-ingredient-bones",
+      "key": "bones",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/bones.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        48,
+        64,
+        365,
+        315
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        124
+      ],
+      "bytes": 9468,
+      "sha256": "9f7fcdf15b1d1cec41106ddf7c23257600159758438af909ab3aa188b7081c90"
+    },
+    {
+      "id": "food-ingredient-mince",
+      "key": "mince",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/mince.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        412,
+        86,
+        761,
+        314
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        103
+      ],
+      "bytes": 9482,
+      "sha256": "e7ad6a91f4812a6c492f26252c8cf07af468f9264da71f36d8625341427248ce"
+    },
+    {
+      "id": "food-ingredient-belly",
+      "key": "belly",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/belly.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        814,
+        54,
+        1140,
+        322
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        129
+      ],
+      "bytes": 10096,
+      "sha256": "5fc4e3a4126660503ba65af4fa92c9f3f03876d6fa11b66318aaff342ef6d125"
+    },
+    {
+      "id": "food-ingredient-peanut",
+      "key": "peanut",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/peanut.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        1202,
+        79,
+        1482,
+        308
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        128
+      ],
+      "bytes": 10970,
+      "sha256": "d4563273b8cdea557f71eceb8765fa8450858d27a23de2d720b12d6043a699ae"
+    },
+    {
+      "id": "food-ingredient-rice",
+      "key": "rice",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/rice.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        50,
+        348,
+        344,
+        639
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        155
+      ],
+      "bytes": 12496,
+      "sha256": "eeb6eb8fbf4bebe5b9c42a6043f5036495ae58ccd62e97d583363d92bea376ca"
+    },
+    {
+      "id": "food-ingredient-pickle",
+      "key": "pickle",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/pickle.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        422,
+        409,
+        755,
+        634
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        106
+      ],
+      "bytes": 9444,
+      "sha256": "45f6efb6a4b3d9d824041c2cd398df1689605de535b0d4515a776b9c7cfde656"
+    },
+    {
+      "id": "food-ingredient-oil",
+      "key": "oil",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/oil.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        851,
+        342,
+        1083,
+        650
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        118,
+        157
+      ],
+      "bytes": 9584,
+      "sha256": "487e0ce7255730ab28891d78feb7f1bb17d0448a735ddf0bd6e8565d0c8e457a"
+    },
+    {
+      "id": "food-ingredient-soy",
+      "key": "soy",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/soy.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        1282,
+        342,
+        1407,
+        645
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        65,
+        157
+      ],
+      "bytes": 5774,
+      "sha256": "f5ccb3aad3948e60c19adcfb59cb4e65146aca84c2c402069025c6e56dd879b8"
+    },
+    {
+      "id": "food-ingredient-oyster",
+      "key": "oyster",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/oyster.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        112,
+        659,
+        295,
+        964
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        94,
+        157
+      ],
+      "bytes": 6508,
+      "sha256": "0f49d6febf1b36c8f2a6a556cb00739a6a560bcfaceadcf9e6e7c6b4c8487287"
+    },
+    {
+      "id": "food-ingredient-salt",
+      "key": "salt",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/salt.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        495,
+        686,
+        666,
+        964
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        97,
+        157
+      ],
+      "bytes": 8094,
+      "sha256": "d477a46904051320086e1b59828c84ca7fd03da0132d29faeee89b19c4f2785d"
+    },
+    {
+      "id": "food-ingredient-sugar",
+      "key": "sugar",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/sugar.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        831,
+        681,
+        1111,
+        963
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        156,
+        157
+      ],
+      "bytes": 10672,
+      "sha256": "5cad455afe5fc00a8ce38b7c87a2ee10065ec45c1a9289c200b42967221567b4"
+    },
+    {
+      "id": "food-ingredient-cooking-wine",
+      "key": "cooking-wine",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/cooking-wine.webp",
+      "source": "assets/illustrations/source/ingredients-02.png",
+      "source_crop": [
+        1281,
+        658,
+        1408,
+        969
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        64,
+        157
+      ],
+      "bytes": 5868,
+      "sha256": "6ef1c1b8cffbed8b8c25e5274a101a26c7995a7b27072a4d06c899f692de7520"
+    },
+    {
+      "id": "food-ingredient-beanpaste",
+      "key": "beanpaste",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/beanpaste.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        56,
+        70,
+        292,
+        321
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        148,
+        157
+      ],
+      "bytes": 12720,
+      "sha256": "954ccf662452bc2188ae88a03ac2eeba20994013bbd47680fd48db5166178c27"
+    },
+    {
+      "id": "food-ingredient-plum",
+      "key": "plum",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/plum.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        371,
+        69,
+        622,
+        326
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        153,
+        157
+      ],
+      "bytes": 11692,
+      "sha256": "8053409128bb4dbecda97b1b5744ae48622df85cd1d16b4bd9067d449e690a23"
+    },
+    {
+      "id": "food-ingredient-anise",
+      "key": "anise",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/anise.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        660,
+        86,
+        939,
+        329
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        137
+      ],
+      "bytes": 13112,
+      "sha256": "e745de06802a1cb50064e3131109cca09c88cb0d292daddd82cc198a42bb1fcd"
+    },
+    {
+      "id": "food-ingredient-jar",
+      "key": "jar",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/jar.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        985,
+        68,
+        1202,
+        323
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        134,
+        157
+      ],
+      "bytes": 10464,
+      "sha256": "44ed54ccc2f95b41d2bbe20cec230e9ad008b96605d402624c7f90840d9f341c"
+    },
+    {
+      "id": "food-ingredient-blueberry",
+      "key": "blueberry",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/blueberry.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        48,
+        401,
+        324,
+        618
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        123
+      ],
+      "bytes": 10144,
+      "sha256": "f34328af014496d8e9738b730db835dcb094c3a1552fc8e28bbdc10cccaf310b"
+    },
+    {
+      "id": "food-ingredient-grape",
+      "key": "grape",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/grape.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        354,
+        353,
+        617,
+        634
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        147,
+        157
+      ],
+      "bytes": 12168,
+      "sha256": "c8a38a02e024080e9365948de1b4045e727e78ec6add7e6ebc7e0b2a76f07f38"
+    },
+    {
+      "id": "food-ingredient-apple",
+      "key": "apple",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/apple.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        663,
+        357,
+        933,
+        628
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        156,
+        157
+      ],
+      "bytes": 11816,
+      "sha256": "998e0e83f26a8aab9d7867724a2de1bc61de7937ad03ddcfeaa134a13766db38"
+    },
+    {
+      "id": "food-ingredient-pineapple",
+      "key": "pineapple",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/pineapple.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        981,
+        332,
+        1229,
+        639
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        127,
+        157
+      ],
+      "bytes": 13574,
+      "sha256": "5f43012e82e3b95ce7b6f132748f4eb1daaf9272d4887e2bb512f1fd636cc13b"
+    },
+    {
+      "id": "food-ingredient-banana",
+      "key": "banana",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/banana.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        37,
+        641,
+        331,
+        910
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        144
+      ],
+      "bytes": 10076,
+      "sha256": "e98310b67c3048ef8aacdf03ec0f21e298538a0f0800ff8edf3d47d64e38ea52"
+    },
+    {
+      "id": "food-ingredient-strawberry",
+      "key": "strawberry",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/strawberry.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        370,
+        652,
+        627,
+        904
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        154
+      ],
+      "bytes": 14088,
+      "sha256": "279b62675dfc950b805f29478f123b3488976b42bd902aa160627e7fbc7400d5"
+    },
+    {
+      "id": "food-ingredient-cherry-tomato",
+      "key": "cherry-tomato",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/cherry-tomato.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        664,
+        685,
+        931,
+        896
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        124
+      ],
+      "bytes": 11210,
+      "sha256": "93ce745717050b25d7970241c20937bb4d3092950c4e4a3ab6d800c99245371b"
+    },
+    {
+      "id": "food-ingredient-milo",
+      "key": "milo",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/milo.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        993,
+        650,
+        1208,
+        912
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        129,
+        157
+      ],
+      "bytes": 9612,
+      "sha256": "1656b119a764452144f42313c2a815893db3b83c601811f719159943ea0864a9"
+    },
+    {
+      "id": "food-ingredient-condensed-milk",
+      "key": "condensed-milk",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/condensed-milk.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        76,
+        936,
+        332,
+        1189
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        155
+      ],
+      "bytes": 11418,
+      "sha256": "d36ad6f9cf9821f1be38baec65020ae2fced9bc660f6a2843ff885eacf2ac9e9"
+    },
+    {
+      "id": "food-ingredient-cream-crackers",
+      "key": "cream-crackers",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/cream-crackers.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        359,
+        943,
+        655,
+        1194
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        133
+      ],
+      "bytes": 11120,
+      "sha256": "8b2bb14753907af8b6b199f5bb6edc5fb8922d3425973c872663b0340455e875"
+    },
+    {
+      "id": "food-ingredient-milk-carton",
+      "key": "milk-carton",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/milk-carton.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        702,
+        926,
+        900,
+        1194
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        116,
+        157
+      ],
+      "bytes": 6554,
+      "sha256": "e1a7356ce21aef10bb8dbf2c7fc71e1a2a7167c3ba214c3cd18b3883bd1c8eeb"
+    },
+    {
+      "id": "food-ingredient-fruit-basket",
+      "key": "fruit-basket",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/fruit-basket.webp",
+      "source": "assets/illustrations/source/ingredients-03.png",
+      "source_crop": [
+        935,
+        949,
+        1229,
+        1190
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        129
+      ],
+      "bytes": 11792,
+      "sha256": "f47ea3eb9897f40abb25d11990c6541ef839c09cbed534b140f758170cb9ee9f"
+    },
+    {
+      "id": "food-ingredient-oats",
+      "key": "oats",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/oats.webp",
+      "source": "assets/illustrations/source/ingredients-04.png",
+      "source_crop": [
+        98,
+        163,
+        852,
+        753
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        157,
+        123
+      ],
+      "bytes": 11572,
+      "sha256": "29327a2d5033dec57a629798d0e29adac9967f859a37afa87adcd9c83052e5d9"
+    },
+    {
+      "id": "food-ingredient-protein-powder",
+      "key": "protein-powder",
+      "kind": "ingredient",
+      "file": "assets/illustrations/ingredient/protein-powder.webp",
+      "source": "assets/illustrations/source/ingredients-04.png",
+      "source_crop": [
+        1067,
+        117,
+        1707,
+        779
+      ],
+      "dimensions": [
+        192,
+        192
+      ],
+      "content_size": [
+        152,
+        157
+      ],
+      "bytes": 7532,
+      "sha256": "17fbc93357f10feb8d969f9e151c8d850b32c0413e067761cff14a0af2a98f23"
+    }
+  ],
+  "source_bytes": 13658077,
+  "optimized_bytes": 1301690
+}

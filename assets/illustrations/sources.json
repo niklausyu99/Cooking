@@ -1,0 +1,30 @@
+[
+  {
+    "key": "dishes-01",
+    "path": "assets/illustrations/source/dishes-01.png"
+  },
+  {
+    "key": "dishes-02",
+    "path": "assets/illustrations/source/dishes-02.png"
+  },
+  {
+    "key": "dishes-03",
+    "path": "assets/illustrations/source/dishes-03.png"
+  },
+  {
+    "key": "ingredients-01",
+    "path": "assets/illustrations/source/ingredients-01.png"
+  },
+  {
+    "key": "ingredients-02",
+    "path": "assets/illustrations/source/ingredients-02.png"
+  },
+  {
+    "key": "ingredients-03",
+    "path": "assets/illustrations/source/ingredients-03.png"
+  },
+  {
+    "key": "ingredients-04",
+    "path": "assets/illustrations/source/ingredients-04.png"
+  }
+]

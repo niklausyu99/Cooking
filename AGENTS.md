@@ -12,6 +12,6 @@ The deliverable is `little-basket.html`, a single offline-capable, mobile-first 
 
 Respect the user's recipe notes. Do not add yam soup. Use a shared ingredient identity for pork ribs / soup bones. Keep pantry inventory, planned ingredients, and purchased groceries distinct.
 
-Treat this as a phone app. Main navigation is market, recipes, current list, and kitchen (stock levels / fresh inventory / 30-day history). A trip reset clears the current plan only. Buying is recorded on check, not on adding to the cart. Long-lasting levels are manual and persistent; selecting recipes never decrements them. New recipes are normally added through the conversation and stable built-in IDs, preserving browser data during upgrades.
+Treat this as a phone app. Main navigation is market, recipes, current list, and kitchen (stock levels / fresh inventory / 30-day history). A trip reset clears the current plan only. Buying is recorded on check, not on adding to the cart. Long-lasting levels are manual and persistent; selecting recipes never decrements them. New recipes can be added and edited in the app or maintained through conversation and stable built-in IDs, preserving browser data during upgrades.
 
 Run `python3 tests/test_app.py` for material interaction changes. Test narrow mobile widths and keyboard access. Do not overwrite or reset saved user data during development.
