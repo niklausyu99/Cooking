@@ -637,6 +637,23 @@ class BasketTests(unittest.TestCase):
         self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 54)
 
 
+    def test_35_catalog_upgrade_keeps_custom_identity_and_stock(self):
+        self.page.evaluate("""()=>{
+          state.catalogVersion=2026101901;
+          const item=state.ingredients.find(i=>i.id==='milo');item.id='my-milo';item.name='Milo';item.pantry=false;delete item.lasting;
+          state.ingredients.find(i=>i.id==='cream-crackers').name='Hup Seng 梳打饼';
+          state.levels=[{id:'my-milo',percent:42,updatedAt:new Date().toISOString()}];state.stock=['my-milo'];
+          state.manual=[{id:'my-milo',note:'自己的罐子'}];persist();
+        }""")
+        self.page.reload()
+        saved=self.saved()
+        self.assertEqual(len([i for i in saved['ingredients'] if i['art']=='milo']),1)
+        self.assertNotIn('milo',[i['id'] for i in saved['ingredients']])
+        self.assertEqual(saved['manual'][0]['id'],'my-milo')
+        self.assertEqual(saved['levels'][0]['percent'],42)
+        self.assertTrue(next(i for i in saved['ingredients'] if i['id']=='my-milo')['lasting'])
+        self.assertEqual(next(i for i in saved['ingredients'] if i['id']=='cream-crackers')['name'],'梳打饼')
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
