@@ -1,0 +1,15 @@
+{
+  "runtime": "codex-cli 0.159.2",
+  "installed_skills": 14,
+  "installed_native_roles": 10,
+  "integrity": "passed: complete trees + SHA-256 + exact upstream agent bodies",
+  "config_schema": "official openai/codex codex-rs/core/config.schema.json; registry and role layers passed",
+  "live_discovery": "unconfirmed",
+  "diagnosis": [
+    "Standalone Codex app-server cannot initialize SQLite in read-only host Codex home.",
+    "Temporary sqlite_home/log_dir overrides pass that stage but app-server still reports read-only filesystem; its diagnostic also says /workspace project-local config is disabled until trusted, while skills still load.",
+    "No global trust, host configuration, or permissions were changed.",
+    "This chat agent tool has no role-selector argument. Installed native role names are therefore not claimed callable in the current chat."
+  ],
+  "next_runtime": "Open or reload this trusted repository in a Codex runtime supporting project skills and [agents] custom roles; rescan skills there. Installation is file/schema verified, activation is not proven."
+}
