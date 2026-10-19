@@ -624,7 +624,7 @@ class BasketTests(unittest.TestCase):
     def test_34_food_assets_are_padded_and_not_stored_in_family_data(self):
         from PIL import Image
         manifest = json.loads((ROOT / 'assets/illustrations/manifest.json').read_text())
-        self.assertEqual(len(manifest['assets']), 54)
+        self.assertEqual(len(manifest['assets']), 55)
         for asset in manifest['assets']:
             image = Image.open(ROOT / asset['file']).convert('RGBA')
             box = image.getchannel('A').getbbox()
@@ -634,7 +634,7 @@ class BasketTests(unittest.TestCase):
             self.assertLess(box[2], image.width * .925)
             self.assertLess(box[3], image.height * .925)
         self.assertNotIn('data:image', json.dumps(self.saved()))
-        self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 54)
+        self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 55)
 
 
     def test_35_catalog_upgrade_keeps_custom_identity_and_stock(self):

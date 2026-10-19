@@ -24,6 +24,7 @@ GRIDS = {
     'ingredients-02': (4, 3, ['bones', 'mince', 'belly', 'peanut', 'rice', 'pickle', 'oil', 'soy', 'oyster', 'salt', 'sugar', 'cooking-wine']),
     'ingredients-03': (4, 4, ['beanpaste', 'plum', 'anise', 'jar', 'blueberry', 'grape', 'apple', 'pineapple', 'banana', 'strawberry', 'cherry-tomato', 'milo', 'condensed-milk', 'cream-crackers', 'milk-carton', 'fruit-basket']),
     'ingredients-04': (2, 1, ['oats', 'protein-powder']),
+    'hero-01': (1, 1, ['basket']),
 }
 
 
@@ -74,10 +75,10 @@ def prepare():
             crop_array = np.asarray(crop).copy()
             crop_array[:, :, 3][~mask[box[1]:box[3], box[0]:box[2]]] = 0
             crop = Image.fromarray(crop_array)
-            kind = 'dish' if key.startswith('dishes') else 'ingredient'
-            canvas_size = (960, 640) if kind == 'dish' else (192, 192)
-            # Dish images retain 15% clear space on every side; icons keep a 9% gutter.
-            fill = .70 if kind == 'dish' else .82
+            kind = 'dish' if key.startswith('dishes') else 'decoration' if key.startswith('hero') else 'ingredient'
+            canvas_size = {'dish': (960, 640), 'ingredient': (192, 192), 'decoration': (640, 440)}[kind]
+            # Preserve clear padding: dishes 15%, icons 9%, hero basket 11%.
+            fill = {'dish': .70, 'ingredient': .82, 'decoration': .78}[kind]
             max_w, max_h = int(canvas_size[0] * fill), int(canvas_size[1] * fill)
             scale = min(max_w / crop.width, max_h / crop.height, 1)
             size = (max(1, round(crop.width * scale)), max(1, round(crop.height * scale)))
@@ -91,7 +92,7 @@ def prepare():
             asset_id = 'food-' + kind + '-' + name
             definitions.append(f'<image id="{asset_id}" width="{canvas.width}" height="{canvas.height}" href="data:image/webp;base64,{encoded}"/>')
             metadata.append({'id': asset_id, 'key': name, 'kind': kind, 'file': str(output.relative_to(ROOT)), 'source': str(master.relative_to(ROOT)), 'source_crop': list(box), 'dimensions': list(canvas_size), 'content_size': list(size), 'bytes': output.stat().st_size, 'sha256': hashlib.sha256(output.read_bytes()).hexdigest()})
-    manifest = {'format': 'WebP with alpha', 'quality': {'dish': 90, 'ingredient': 92}, 'assets': metadata, 'source_bytes': original_bytes, 'optimized_bytes': sum(item['bytes'] for item in metadata)}
+    manifest = {'format': 'WebP with alpha', 'quality': {'dish': 90, 'ingredient': 92, 'decoration': 92}, 'assets': metadata, 'source_bytes': original_bytes, 'optimized_bytes': sum(item['bytes'] for item in metadata)}
     (ASSETS / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     (ASSETS / 'embedded-definitions.txt').write_text('\n'.join(definitions))
     app = ROOT / 'little-basket.html'

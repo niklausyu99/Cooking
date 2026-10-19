@@ -2,7 +2,8 @@
   "format": "WebP with alpha",
   "quality": {
     "dish": 90,
-    "ingredient": 92
+    "ingredient": 92,
+    "decoration": 92
   },
   "assets": [
     {
@@ -1246,8 +1247,31 @@
       ],
       "bytes": 7532,
       "sha256": "17fbc93357f10feb8d969f9e151c8d850b32c0413e067761cff14a0af2a98f23"
+    },
+    {
+      "id": "food-decoration-basket",
+      "key": "basket",
+      "kind": "decoration",
+      "file": "assets/illustrations/decoration/basket.webp",
+      "source": "assets/illustrations/source/hero-01.png",
+      "source_crop": [
+        139,
+        128,
+        1434,
+        887
+      ],
+      "dimensions": [
+        640,
+        440
+      ],
+      "content_size": [
+        499,
+        292
+      ],
+      "bytes": 58470,
+      "sha256": "4ab5934968f0be896259076637b53f6b3a4656e99a5806add217a5010d58d07f"
     }
   ],
-  "source_bytes": 13658077,
-  "optimized_bytes": 1301690
+  "source_bytes": 15666843,
+  "optimized_bytes": 1360160
 }
