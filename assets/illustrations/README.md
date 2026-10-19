@@ -14,6 +14,6 @@ Run `python3 scripts/prepare_food_assets.py` from the repository root (Pillow, n
 
 Cooked dishes have their own shapes: irregular tomato and folded egg, broad sweet-potato leaves versus slender pea shoots, varied braised mince, potato chunks, pork belly and distinguishable soups. Small icons simplify structure at phone size. Brand, typography and UI controls keep their existing roles; search, add, sync and delete use simple code-drawn SVG icons.
 
-Food bytes never enter app state, JSON backups or Supabase. New user-created recipes initially use the selected generic food illustration. Recipe-specific artwork is added through subsequent repository updates, not an unconfigured in-app generation service.
+Food bytes never enter app state, JSON backups or Supabase. New user-created recipes initially use a generic food illustration; existing saved artwork choices are preserved. Recipe-specific artwork is added through subsequent repository updates, not an unconfigured in-app generation service.
 
 The recipe-page hero basket now matches the food collection: soft colored contours, layered leafy vegetables, tomato, carrot and daikon, simplified woven straw and gentle shading. `source/hero-01.png` is the untouched generated master; `decoration/basket.webp` is 58,470 bytes. The old geometric basket and floating hearts were replaced; the brand mark and UI action icons remain unchanged.

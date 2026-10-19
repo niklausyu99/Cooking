@@ -84,6 +84,11 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 .inventory-card[style] .inventory-slider::-moz-range-thumb{background:var(--level-color);transition:background-color 80ms linear}
 .inventory-card[style] .level-endpoints span:first-child{color:var(--empty-color);font-weight:var(--empty-weight);transition:color 80ms linear,font-weight 80ms linear}
 .inventory-card[style] .level-endpoints span:last-child{color:var(--full-color);font-weight:var(--full-weight);transition:color 80ms linear,font-weight 80ms linear}
+
+/* Give boxed select arrows the same breathing room as the field text. */
+.field select,.ingredient-editor select{-webkit-appearance:none;appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23506638' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:16px 16px;background-position:right 14px center;cursor:pointer}
+.sort-control:not(.market-sort-control)>.icon{right:12px}.sort-control:not(.market-sort-control) select{padding-right:36px}
+@media(forced-colors:active){.field select,.ingredient-editor select{-webkit-appearance:auto;appearance:auto;background-image:none}}
 </style>
 </head>
 <body>
@@ -206,7 +211,7 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 <dialog id="detail-dialog" aria-labelledby="detail-dialog-title"><div class="dialog-head"><h2 id="detail-dialog-title">厨房小笔记</h2><button class="close-button" data-action="close" aria-label="关闭菜谱"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body" id="detail-body"></div></dialog>
 <dialog id="editor-dialog" aria-labelledby="editor-title"><div class="dialog-head"><h2 id="editor-title">记一道新菜</h2><button class="close-button" data-action="close" aria-label="关闭编辑"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body"><form id="recipe-form">
  <input type="hidden" id="edit-recipe-id"><label class="field">菜名<input id="edit-title" required maxlength="60" placeholder="例如：小红书学的蒸排骨"></label>
- <div class="form-two"><label class="field">分类<select id="edit-type"><option value="dish">家常菜</option><option value="soup">煲汤</option></select></label><label class="field">小图标<select id="edit-emoji"><option value="soup">一锅汤</option><option value="dish">家常菜</option><option value="greens">绿叶菜</option><option value="tomato">番茄</option><option value="potato">马铃薯</option><option value="meat">肉类</option><option value="egg">鸡蛋</option><option value="peanut">花生</option></select></label></div>
+ <label class="field">分类<select id="edit-type"><option value="dish">家常菜</option><option value="soup">煲汤</option></select></label>
  <div class="form-two"><label class="field">以下份量供几人吃<input id="edit-servings" type="number" min="1" max="12" step="1" required value="2"></label><label class="field">预计时间（分钟）<input id="edit-time" type="number" min="1" max="600" step="1" value="20" required></label></div>
  <label class="field">一句话备注<input id="edit-description" maxlength="100" placeholder="这道菜最好吃的地方，或搭什么吃"></label>
  <div class="field"><span>食材</span><span class="field-help">番茄／西红柿、红萝卜／胡萝卜、排骨／煲汤骨会自动认成同一种。数量可留空，表示适量。</span><div class="editor-labels"><span>名称</span><span>数量</span><span>单位</span><span></span></div><div id="ingredient-rows"></div><button type="button" class="button secondary" data-action="ingredient-row"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>再加一样食材</button></div>
@@ -469,7 +474,7 @@ $('#source-rows').addEventListener('input',()=>{
 function editRecipe(id){
  if($('#detail-dialog').open)$('#detail-dialog').close();
  const r=id?effective(recipe(id)):null;$('#recipe-form').reset();$('#edit-recipe-id').value=id||'';$('#editor-title').textContent=r?'编辑我的做法':'记一道新菜';
- $('#edit-title').value=r?.title||'';$('#edit-type').value=r?.type||(filter==='soup'?'soup':'dish');$('#edit-emoji').value=r?.emoji||'dish';$('#edit-time').value=r?.time||20;$('#edit-servings').value=r?.servings||2;$('#edit-description').value=r?.description||'';$('#edit-steps').value=r?.steps.join('\n')||'';$('#edit-note').value=r?.note||'';setSourceRows(recipeSources(r));$('#edit-learning').checked=r?.learning??true;$('#recipe-error').hidden=true;
+ $('#edit-title').value=r?.title||'';$('#edit-type').value=r?.type||(filter==='soup'?'soup':'dish');$('#edit-time').value=r?.time||20;$('#edit-servings').value=r?.servings||2;$('#edit-description').value=r?.description||'';$('#edit-steps').value=r?.steps.join('\n')||'';$('#edit-note').value=r?.note||'';setSourceRows(recipeSources(r));$('#edit-learning').checked=r?.learning??true;$('#recipe-error').hidden=true;
  $('#ingredient-rows').replaceChildren();if(r)r.ingredients.forEach(a=>ingredientRow({...a,name:ingredient(a.id).name,unit:a.qty===null?'':a.unit}));else{ingredientRow();ingredientRow();}
  updateSuggestions();dirtyEditor=false;showDialog($('#editor-dialog'));
 }
@@ -495,7 +500,7 @@ $('#recipe-form').addEventListener('submit',event=>{
   if(used.has(item.id))return formError('#recipe-error',`${name} 重复了，请合并在同一行。`);used.add(item.id);ingredients.push({id:item.id,qty,unit});
  }
  const id=$('#edit-recipe-id').value||uid('r'),original=recipe(id),steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean);
- const values={title,type:$('#edit-type').value,emoji:$('#edit-emoji').value,servings:Number($('#edit-servings').value),time:Number($('#edit-time').value),description:$('#edit-description').value.trim(),ingredients,steps,note:$('#edit-note').value.trim(),origin:'我的厨房笔记',learning:$('#edit-learning').checked,source:sources[0]||'',sources};
+ const values={title,type:$('#edit-type').value,emoji:original?.emoji||($('#edit-type').value==='soup'?'soup':'dish'),servings:Number($('#edit-servings').value),time:Number($('#edit-time').value),description:$('#edit-description').value.trim(),ingredients,steps,note:$('#edit-note').value.trim(),origin:'我的厨房笔记',learning:$('#edit-learning').checked,source:sources[0]||'',sources};
  mutate(()=>{
   state.ingredients.push(...additions);
   if(original){const r=effective(original);if(original.variants){original.variants=original.variants.map(v=>v.id===r.activeVariant.id?{...v,ingredients,steps}:v);}Object.assign(original,values);}
