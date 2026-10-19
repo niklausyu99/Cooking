@@ -262,5 +262,68 @@ class FamilySyncTests(unittest.TestCase):
         self.assertEqual(second.evaluate('state.recipes[0].sources'), links)
 
 
+
+    def test_connect_form_accepts_private_code_and_shared_link_without_login(self):
+        for raw in [KEY_A, URL+'#family='+KEY_A]:
+            page=self.device(None)
+            page.locator('#cloud-button').click()
+            page.locator('#family-connect-input').fill(raw)
+            page.locator('#family-connect-form button[type=submit]').click()
+            self.ready(page)
+            self.assertEqual(page.evaluate('cloudEngine.connection.familyId'),FAMILY_A)
+            self.assertEqual(page.evaluate('location.hash'),'')
+            self.assertEqual(page.locator('input[type=password],input[type=email]').count(),0)
+
+
+    def test_recipe_preview_omissions_sync_without_inventory_changes(self):
+        first=self.device()
+        self.ready(first)
+        second=self.device()
+        self.ready(second)
+        first.evaluate("requestRecipe('tomato-egg')")
+        self.sync(first)
+        self.sync(second)
+        second.locator('.mobile-nav [data-view=market]').click()
+        second.locator('#basket-peek').click()
+        second.locator('[data-preview-id=tomato] button').click()
+        self.sync(second)
+        self.sync(first)
+        self.assertNotIn('tomato',first.evaluate('groceryData().list.map(e=>e.id)'))
+        self.assertEqual(first.evaluate('state.stock'),[])
+        self.assertEqual(first.evaluate('state.history'),[])
+        first.evaluate("mutate(()=>addManual('tomato'))")
+        self.sync(first)
+        self.sync(second)
+        expect(second.locator('[data-preview-id=tomato]')).to_be_visible()
+
+
+
+    def test_item_and_total_notes_sync_and_preserve_unsent_guest_note(self):
+        first=self.device()
+        self.ready(first)
+        second=self.device()
+        self.ready(second)
+        self.add(first)
+        first.locator('.mobile-nav [data-view=market]').click()
+        first.locator('#basket-peek').click()
+        first.locator('[data-preview-id=tomato] summary').click()
+        first.locator('#basket-preview [data-item-note=tomato]').fill('挑熟一点')
+        self.sync(first)
+        self.sync(second)
+        self.assertEqual(second.evaluate("itemNote('tomato')"),'挑熟一点')
+        first.locator('[data-action=basket-full]').click()
+        first.locator('.trip-note summary').click()
+        first.locator('[data-trip-note]').fill('今天带购物袋')
+        self.sync(first)
+        self.sync(second)
+        self.assertEqual(second.evaluate('state.trip.note'),'今天带购物袋')
+        guest=self.device(None)
+        guest.locator('.mobile-nav [data-view=shopping]').click()
+        guest.locator('.trip-note summary').click()
+        guest.locator('[data-trip-note]').fill('还没连接也写了备注')
+        self.assertTrue(guest.evaluate('meaningful(state)'))
+
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

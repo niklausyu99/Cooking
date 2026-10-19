@@ -2,9 +2,11 @@
 from pathlib import Path
 import base64
 import json
+import hashlib
 import os
 import re
 import sys
+import shutil
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,12 +43,28 @@ def build(output, url='', key='', require_cloud=False):
     config = validate_config(url, key) if url else {'supabaseUrl': '', 'publishableKey': ''}
     encoded = json.dumps(config, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
     html = source.replace(PLACEHOLDER, encoded)
+    pwa_head = '''<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="菜篮子">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">'''
+    html = html.replace('<!-- PWA-HEAD -->', pwa_head)
     output = Path(output)
     # Caller chooses an output folder. Never clean the checkout or an existing folder blindly.
     output.mkdir(parents=True, exist_ok=True)
     for name in ['index.html', 'little-basket.html']:
         (output / name).write_text(html)
     (output / '.nojekyll').write_text('')
+    manifest = (ROOT / 'pwa/manifest.webmanifest').read_text()
+    (output / 'manifest.webmanifest').write_text(manifest)
+    shutil.copytree(ROOT / 'pwa/icons', output / 'icons', dirs_exist_ok=True)
+    digest = hashlib.sha256((html + manifest).encode())
+    for icon in sorted((ROOT / 'pwa/icons').glob('*.png')):
+        digest.update(icon.read_bytes())
+    worker = (ROOT / 'pwa/sw.js').read_text().replace('__APP_VERSION__', digest.hexdigest()[:16])
+    (output / 'sw.js').write_text(worker)
     print('Built standalone HTML. Cloud configuration: ' + ('enabled' if url else 'not configured'))
 
 

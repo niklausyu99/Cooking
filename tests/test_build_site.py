@@ -31,12 +31,20 @@ class BuildTests(unittest.TestCase):
     def test_publishes_only_standalone_app_and_public_config(self):
         with tempfile.TemporaryDirectory() as output:
             builder.build(output, 'https://test.supabase.co', 'sb_publishable_fixture_only', require_cloud=True)
-            self.assertEqual({p.name for p in Path(output).iterdir()}, {'index.html', 'little-basket.html', '.nojekyll'})
+            self.assertEqual({p.name for p in Path(output).iterdir()}, {'index.html', 'little-basket.html', '.nojekyll', 'manifest.webmanifest', 'sw.js', 'icons'})
             html = (Path(output) / 'index.html').read_text()
             self.assertIn('https://test.supabase.co', html)
             self.assertNotIn('sb_secret_', html)
             self.assertEqual(html, (Path(output) / 'little-basket.html').read_text())
             self.assertNotIn('cloud-password', html)
+            manifest=json.loads((Path(output)/'manifest.webmanifest').read_text())
+            self.assertEqual(manifest['display'],'standalone')
+            self.assertEqual(manifest['start_url'],'./')
+            self.assertEqual(manifest['scope'],'./')
+            self.assertNotIn('family=',json.dumps(manifest))
+            self.assertNotIn('__APP_VERSION__',(Path(output)/'sw.js').read_text())
+            self.assertIn('apple-mobile-web-app-capable',html)
+            self.assertNotIn('source.png',{p.name for p in Path(output).rglob('*')})
 
 
 if __name__ == '__main__':

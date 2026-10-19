@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "菜篮子 · Little Basket",
+  "short_name": "菜篮子",
+  "lang": "zh-Hans",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5ee",
+  "theme_color": "#f6f5ee",
+  "description": "一家人的买菜清单、菜谱与小厨房。",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

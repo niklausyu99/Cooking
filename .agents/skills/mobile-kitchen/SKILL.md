@@ -25,6 +25,8 @@ This is a project-specific skill written for this repository. It is not a copied
 
 - Start at 360–390 px; support 320 px through wide desktop layouts without horizontal page scrolling.
 - Use touch targets of at least 44 px, 16 px form fields, safe-area padding, and a reachable bottom navigation.
+- Navigation order: market, list, recipes, kitchen. Kitchen refresh keeps its tab; leaving and re-entering defaults to lasting supplies.
+- Market floating basket previews pending items and permits per-trip removal with an in-dialog undo. Full-list purchase checks remain separate. Do not mark stock available to hide a trip item.
 - Keep checked purchases, ingredients already at home, and ingredients needing replenishment distinct.
 - Merge shared ingredient identities. 排骨 and 煲汤骨 are interchangeable here. Do not add 山药汤.
 - State serving assumptions. Do not silently invent the user's preferences or cupboard contents.
