@@ -66,7 +66,6 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 :root{--state-red:#98534e;--state-red-bg:#f6e9e5;--state-amber:#826329;--state-amber-bg:#f5efdf;--stock-ink:#344d2a}
 .market-status.has-stock{color:var(--stock-ink);font-weight:750}
 .market-tools{display:flex;align-items:center;gap:9px;margin-bottom:23px;min-width:0}.market-tools .market-filters{flex:1;min-width:0;margin:0}.sort-control{position:relative;display:inline-flex;align-items:center;flex-shrink:0;min-height:44px;min-width:116px;border:1px solid var(--line);border-radius:12px;background:var(--white);color:var(--ink)}.sort-control select{-webkit-appearance:none;appearance:none;display:block;width:100%;height:44px;min-width:0;border:0;border-radius:12px;background:transparent;color:inherit;font:inherit;font-size:14px;padding:8px 28px 8px 12px;cursor:pointer}.sort-control>.icon{position:absolute;right:8px;width:16px;height:16px;pointer-events:none}.history-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.history-delete{width:44px;height:44px;display:grid;place-items:center;flex-shrink:0;border-radius:10px;color:var(--state-red)}.history-delete:hover{background:var(--state-red-bg)}.history-delete .icon{width:18px;height:18px}.history-item-name{overflow-wrap:anywhere;min-width:0}.history-row>small{max-width:90px;overflow-wrap:anywhere}
-.stock-choices{display:flex;gap:7px;flex:1 1 100%}.inventory-actions .stock-choice{min-height:44px;padding:8px 12px;flex:1;justify-content:center;border:1px solid currentColor;border-radius:11px;background:var(--white);font-size:13px;font-weight:550;color:var(--olive)}.inventory-actions .stock-choice.negative{color:var(--state-red)}.inventory-actions .stock-choice.positive.is-current{background:var(--pale);font-weight:700}.inventory-actions .stock-choice.negative.is-current{background:var(--state-red-bg);font-weight:700}.stock-present{color:var(--olive);font-weight:750}.stock-depleted{color:var(--state-red);font-weight:750}
 .cloud-button[data-status="disconnected"]{color:var(--muted);border-color:var(--line);background:var(--white)}.cloud-button[data-status="synced"]{color:var(--olive);background:var(--pale);border-color:#bbc9ab}.cloud-button[data-status="pending"],.cloud-button[data-status="syncing"]{color:var(--state-amber);background:var(--state-amber-bg);border-color:#d7c59b}.cloud-button[data-status="error"]{color:var(--state-red);background:var(--state-red-bg);border-color:#d8b6b0}#cloud-connected[data-status="synced"] #cloud-status{color:var(--olive)}#cloud-connected[data-status="pending"] #cloud-status,#cloud-connected[data-status="syncing"] #cloud-status{color:var(--state-amber)}#cloud-connected[data-status="error"] #cloud-status{color:var(--state-red)}#cloud-status{font-weight:600}
 @media(max-width:760px){.sort-control select{font-size:16px}.sort-control{min-width:120px}#add-recipe-button{flex-shrink:0;max-width:48%;font-size:12px;padding:9px 10px}#add-recipe-button span{line-height:1.5}.history-row{gap:8px}.history-row>small{max-width:66px;font-size:12px}}
 
@@ -100,6 +99,14 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 .field select,.ingredient-editor select{-webkit-appearance:none;appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23506638' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:16px 16px;background-position:right 14px center;cursor:pointer}
 .sort-control:not(.market-sort-control)>.icon{right:12px}.sort-control:not(.market-sort-control) select{padding-right:36px}
 @media(forced-colors:active){.field select,.ingredient-editor select{-webkit-appearance:auto;appearance:auto;background-image:none}}
+/* Fresh inventory has three explicit stops; unknown inventory stays neutral. */
+.fresh-control{margin-top:17px}.fresh-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;margin-top:-3px}
+.fresh-label{min-height:44px;min-width:44px;padding:4px 0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:500;transition:color .1s ease,font-weight .1s ease;justify-self:center}
+.fresh-label:first-child{justify-self:start}.fresh-label:last-child{justify-self:end}
+.fresh-label[aria-pressed="true"]{color:var(--level-color);font-weight:750}
+.fresh-ticks{position:absolute;left:12px;right:12px;top:20px;display:flex;justify-content:space-between;pointer-events:none}
+.fresh-ticks i{width:5px;height:5px;border-radius:50%;background:#aeb7a0}
+.fresh-slider:focus-visible{outline-offset:0;border-radius:10px}
 </style>
 </head>
 <body>
@@ -565,7 +572,7 @@ document.addEventListener('click',event=>{
  case 'detail':showDetail(id);break;
  case 'servings':mutate(()=>state.servings=Math.max(1,Math.min(12,state.servings+Number(button.dataset.delta))));break;
  case 'check':togglePurchase(id);break;
- case 'stock-set':setInventoryStock(id,button.dataset.available==='true');break;
+ case 'fresh-stock':{const amount=Number(button.dataset.amount);setInventoryStock(id,amount>0,amount);$('#fresh-'+id)?.focus({preventScroll:true});break;}
  case 'delete-purchase':removePurchaseRecord(id);break;
  case 'stock':case 'have':{
  const previous=structuredClone({stock:state.stock,manual:state.manual,checked:state.checked,levels:state.levels,confirmedStock:state.confirmedStock,stockEdits:state.stockEdits});const had=state.stock.includes(id);
@@ -617,7 +624,7 @@ function validateExtraFields(s,ids){
  const bad=()=>{throw new Error('库存或购买记录格式不正确，当前数据未替换。');};
  const isId=x=>typeof x==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(x);
  const timestamp=x=>typeof x==='string'&&x.length<60&&Number.isFinite(Date.parse(x));
- if(s.stockEdits!==undefined&&(!Array.isArray(s.stockEdits)||s.stockEdits.length>2000||s.stockEdits.some(x=>!x||!ids.has(x.id)||!timestamp(x.updatedAt))||new Set(s.stockEdits.map(x=>x.id)).size!==s.stockEdits.length))bad();
+ if(s.stockEdits!==undefined&&(!Array.isArray(s.stockEdits)||s.stockEdits.length>2000||s.stockEdits.some(x=>!x||!ids.has(x.id)||!timestamp(x.updatedAt)||(x.freshAmount!==undefined&&(!Number.isInteger(x.freshAmount)||x.freshAmount<0||x.freshAmount>2)))||new Set(s.stockEdits.map(x=>x.id)).size!==s.stockEdits.length))bad();
  const validLevel=l=>l&&ids.has(l.id)&&Number.isInteger(l.percent)&&l.percent>=0&&l.percent<=100&&timestamp(l.updatedAt);
  if(s.ingredients.some(i=>i.lasting!==undefined&&typeof i.lasting!=='boolean'))bad();
  if(s.autoReset!==undefined&&typeof s.autoReset!=='boolean')bad();
@@ -680,16 +687,16 @@ $('#reminder-continue').addEventListener('click',()=>{
  }
  $('#reminder-dialog').close();if(pending.manual&&!pending.ids.some(id=>buying.has(id))){persist();render();notify('这次先不买，库存仍按原记录保留。');}else pending.apply();
 });
-function rememberStockEdit(id){state.stockEdits=state.stockEdits.filter(entry=>entry.id!==id);state.stockEdits.push({id,updatedAt:new Date().toISOString()});}
-function setInventoryStock(id,available){
- const item=ingredient(id);if(!item)return;
+function rememberStockEdit(id,freshAmount){const entry={id,updatedAt:new Date().toISOString()};if(freshAmount!==undefined)entry.freshAmount=freshAmount;state.stockEdits=state.stockEdits.filter(edit=>edit.id!==id);state.stockEdits.push(entry);}
+function setInventoryStock(id,available,freshAmount=available?1:0){
+ const item=ingredient(id);if(!item||![0,1,2].includes(freshAmount))return;
  mutate(()=>{
   state.stock=state.stock.filter(x=>x!==id);state.confirmedStock=state.confirmedStock.filter(x=>x!==id);
-  if(available){state.stock.push(id);state.confirmedStock.push(id);state.manual=state.manual.filter(x=>x.id!==id);if(longLasting(item)&&levelOf(id)===0)setLevel(id,100);}
+  if(available){state.stock.push(id);state.confirmedStock.push(id);if(!state.checked.includes(id))state.manual=state.manual.filter(x=>x.id!==id);if(longLasting(item)&&levelOf(id)===0)setLevel(id,100);}
   else if(longLasting(item))setLevel(id,0);
-  rememberStockEdit(id);
+  rememberStockEdit(id,longLasting(item)?undefined:freshAmount);
  });
- notify(available?`${item.name}已记为家里还有`:`${item.name}已记为用完了`);
+ notify(available?`${item.name}${freshAmount===2?'已记为很多':'已记为家里还有'}`:`${item.name}已记为用完了`);
 }
 function removePurchaseRecord(recordId){
  const event=state.history.find(entry=>entry.id===recordId);if(!event)return;
@@ -793,15 +800,38 @@ function levelStyle(percent,known=true){
  const emptyEmphasis=known?Math.max(0,1-t*2)**2:0,fullEmphasis=known?Math.max(0,t*2-1)**2:0;
  return `--level-color:${color};--level-weight:${known?650+100*(1-t):500};--empty-color:${mix(muted,red,known?(1-t)**2:0)};--empty-weight:${500+250*emptyEmphasis};--full-color:${mix(muted,green,known?t**2:0)};--full-weight:${500+250*fullEmphasis}`;
 }
+function freshStock(id){
+ const has=state.stock.includes(id),edit=state.stockEdits.find(entry=>entry.id===id);
+ return {amount:has?(edit?.freshAmount===2?2:1):0,known:has||Boolean(edit)||Boolean(recentPurchase(id,30))};
+}
+function freshStyle(amount,known=true){
+ const color=known?['#98534e','#506638','#35634b'][amount]:'#707567';
+ return `--level-color:${color};--level-weight:${known?750:500}`;
+}
+function freshSlider(item){
+ const fresh=freshStock(item.id),value=fresh.known?fresh.amount:1;
+ return `<div class="fresh-control"><div class="range-wrap"><span class="range-track" aria-hidden="true"></span><span class="range-fill" aria-hidden="true" style="width:${fresh.known?value*50:0}%"></span><span class="fresh-ticks" aria-hidden="true"><i></i><i></i><i></i></span><input class="inventory-slider fresh-slider" id="fresh-${esc(item.id)}" type="range" min="0" max="2" step="1" value="${value}" data-ingredient="${esc(item.id)}" aria-label="${esc(item.name)}库存" aria-valuetext="${fresh.known?['用完了','还有','很多'][value]:'待确认，请选择用完了、还有或很多'}"></div><div class="fresh-labels" role="group" aria-label="${esc(item.name)}库存档位">${['用完了','还有','很多'].map((label,index)=>`<button type="button" class="fresh-label" data-action="fresh-stock" data-id="${esc(item.id)}" data-amount="${index}" aria-pressed="${fresh.known&&fresh.amount===index}">${label}</button>`).join('')}</div></div>`;
+}
+function paintFreshSlider(input){
+ const value=Number(input.value),card=input.closest('.inventory-card');
+ card.style.cssText=freshStyle(value);input.setAttribute('aria-valuetext',['用完了','还有','很多'][value]);
+ card.querySelector('.inventory-amount').textContent=['已用完','还有','很多'][value];
+ card.querySelector('.range-fill').style.width=value*50+'%';
+ card.querySelectorAll('.fresh-label').forEach((button,index)=>button.setAttribute('aria-pressed',String(index===value)));
+}
+function commitFreshSlider(input){
+ const id=input.dataset.ingredient,amount=Number(input.value);
+ setInventoryStock(id,amount>0,amount);$('#fresh-'+id)?.focus({preventScroll:true});
+}
 function renderKitchen(){
  $$('.kitchen-segments button').forEach(b=>{const on=b.dataset.kitchen===kitchenTab;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});
- $('#inventory-add').hidden=kitchenTab==='history';$('#pantry-intro').hidden=kitchenTab==='history';$('#pantry-intro').textContent=kitchenTab==='fresh'?'生鲜买到后会记为还有。用完了手动改掉；七天内买过的，再入单时会提醒确认。':'米、食油、燕麦、冲饮等常备品，滑一下记余量。选菜会略过还有存货的食材，不会自动扣库存。';
+ $('#inventory-add').hidden=kitchenTab==='history';$('#pantry-intro').hidden=kitchenTab==='history';$('#pantry-intro').textContent=kitchenTab==='fresh'?'生鲜用三档记库存：用完了、还有、很多。滑动或点文字选择；七天内买过的，再入单时会提醒确认。':'米、食油、燕麦、冲饮等常备品，滑一下记余量。选菜会略过还有存货的食材，不会自动扣库存。';
  if(kitchenTab==='history'){renderHistory();return;}
  const items=state.ingredients.filter(i=>(i.pantry||state.stock.includes(i.id)||state.levels.some(l=>l.id===i.id)||recentPurchase(i.id,30))&&(kitchenTab==='fresh'?!longLasting(i):longLasting(i)));
  const kitchenCategories=kitchenTab==='inventory'?[CATEGORIES.find(c=>c[0]==='seasoning'),...CATEGORIES.filter(c=>c[0]!=='seasoning')]:CATEGORIES;
  $('#pantry-content').innerHTML=kitchenCategories.map(([id,label])=>{const rows=items.filter(i=>i.category===id);if(!rows.length)return '';return `<section class="grocery-group"><h3 class="group-heading">${label}</h3><div class="inventory-list">${rows.map(i=>{
-  const has=state.stock.includes(i.id),long=longLasting(i),level=levelOf(i.id),known=state.levels.some(l=>l.id===i.id),last=recentPurchase(i.id,30),emptyKnown=!has&&(Boolean(last)||state.stockEdits.some(entry=>entry.id===i.id));
-  return `<article class="inventory-card" data-pantry-id="${esc(i.id)}" ${long?`style="${levelStyle(level,known||has)}"`:""}><div class="inventory-heading"><span aria-hidden="true">${foodIcon(i.art,'food-icon',i.id)}</span><div><h3>${esc(i.name)}</h3><p>${last?`最近购买：${dateLabel(last.boughtAt)}`:'还没有购买记录'}</p></div><span class="inventory-amount ${long?(has?'':'empty-level'):has?'stock-present':emptyKnown?'stock-depleted':'empty-level'}">${long?(known?`${level}%`:has?'还有':'未记录'):has?'还有':emptyKnown?'已用完':'待确认'}</span></div>${long?`<label class="level-label" for="level-${esc(i.id)}"><span>手动记录剩余量</span></label><div class="range-wrap"><span class="range-track" aria-hidden="true"></span><span class="range-fill" aria-hidden="true" style="width:${level}%"></span><input class="inventory-slider" id="level-${esc(i.id)}" type="range" min="0" max="100" step="1" value="${level}" data-ingredient="${esc(i.id)}" aria-label="${esc(i.name)}剩余量" style="--level:${level}%"></div><div class="level-endpoints"><span>用完了</span><span>刚买的</span></div>`:''}<div class="inventory-actions">${long?'':`<div class="stock-choices" role="group" aria-label="${esc(i.name)}库存状态"><button class="stock-toggle stock-choice positive ${has?'is-current':''}" data-action="stock-set" data-available="true" data-id="${esc(i.id)}" aria-pressed="${has}">家里还有</button><button class="stock-choice negative ${emptyKnown?'is-current':''}" data-action="stock-set" data-available="false" data-id="${esc(i.id)}" aria-pressed="${emptyKnown}">用完了</button></div>`}<button class="replenish" data-action="market-add" data-id="${esc(i.id)}">${icon('plus')}补货入单</button>${long?`<span class="level-note">${known?'已用约 '+(100-level)+'%':'选菜不会自动扣减'}</span>`:''}</div></article>`;
+  const has=state.stock.includes(i.id),long=longLasting(i),level=levelOf(i.id),known=state.levels.some(l=>l.id===i.id),last=recentPurchase(i.id,30),fresh=freshStock(i.id);
+  return `<article class="inventory-card" data-pantry-id="${esc(i.id)}" ${long?`style="${levelStyle(level,known||has)}"`:`style="${freshStyle(fresh.amount,fresh.known)}"`}><div class="inventory-heading"><span aria-hidden="true">${foodIcon(i.art,'food-icon',i.id)}</span><div><h3>${esc(i.name)}</h3><p>${last?`最近购买：${dateLabel(last.boughtAt)}`:'还没有购买记录'}</p></div><span class="inventory-amount ${long?(has?'':'empty-level'):fresh.known?'':'empty-level'}">${long?(known?`${level}%`:has?'还有':'未记录'):fresh.known?['已用完','还有','很多'][fresh.amount]:'待确认'}</span></div>${long?`<label class="level-label" for="level-${esc(i.id)}"><span>手动记录剩余量</span></label><div class="range-wrap"><span class="range-track" aria-hidden="true"></span><span class="range-fill" aria-hidden="true" style="width:${level}%"></span><input class="inventory-slider" id="level-${esc(i.id)}" type="range" min="0" max="100" step="1" value="${level}" data-ingredient="${esc(i.id)}" aria-label="${esc(i.name)}剩余量" style="--level:${level}%"></div><div class="level-endpoints"><span>用完了</span><span>刚买的</span></div>`:freshSlider(i)}<div class="inventory-actions"><button class="replenish" data-action="market-add" data-id="${esc(i.id)}">${icon('plus')}补货入单</button>${long?`<span class="level-note">${known?'已用约 '+(100-level)+'%':'选菜不会自动扣减'}</span>`:''}</div></article>`;
  }).join('')}</div></section>`;}).join('');
 }
 function renderHistory(){
@@ -853,6 +883,7 @@ document.addEventListener('pointerdown',event=>{if(!event.target.closest('.marke
  document.addEventListener('change',event=>{if(event.target.id==='history-sort'){historySort=event.target.value;saveViewPreferences();renderHistory();$('#history-sort').focus({preventScroll:true});}});
  $('#market-search').addEventListener('input',event=>{marketSearch=event.target.value.trim();renderMarket();});
 $('#pantry-content').addEventListener('input',event=>{
+ if(event.target.matches('.fresh-slider')){paintFreshSlider(event.target);return;}
  if(!event.target.matches('.inventory-slider'))return;
  const value=Number(event.target.value),id=event.target.dataset.ingredient;
  event.target.style.setProperty('--level',value+'%');event.target.setAttribute('aria-valuetext',value+'%');
@@ -861,10 +892,12 @@ $('#pantry-content').addEventListener('input',event=>{
  event.target.closest('.range-wrap').querySelector('.range-fill').style.width=value+'%';event.target.closest('.inventory-card').querySelector('.level-note').textContent='已用约 '+(100-value)+'%';
 });
 $('#pantry-content').addEventListener('change',event=>{
+ if(event.target.matches('.fresh-slider')){commitFreshSlider(event.target);return;}
  if(!event.target.matches('.inventory-slider'))return;
  setLevel(event.target.dataset.ingredient,Number(event.target.value));persist();renderMarket();renderShopping();renderPlan();
  const card=event.target.closest('.inventory-card');card.querySelector('.inventory-amount').classList.toggle('empty-level',Number(event.target.value)===0);
 });
+$('#pantry-content').addEventListener('pointerup',event=>{if(event.target.matches('.fresh-slider')&&!freshStock(event.target.dataset.ingredient).known)commitFreshSlider(event.target);});
 $('#auto-reset-toggle').addEventListener('change',event=>{
  state.autoReset=event.target.checked;state.trip.date=dayKey();persist();notify(state.autoReset?'已开启每日重置；库存与历史不会清空':'已关闭自动重置，清单保留到你手动开启下一趟');
 });
@@ -931,7 +964,7 @@ function readConnection(){
 function isCloudConfigured(){return /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(CLOUD_CONFIG.supabaseUrl||'')&&((CLOUD_CONFIG.publishableKey||'').startsWith('sb_publishable_')||(CLOUD_CONFIG.publishableKey||'').startsWith('eyJ'));}
 function canonical(value){return JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.keys(item).sort().reduce((out,key)=>{if(key!=='__proto__')out[key]=item[key];return out;},{}):item);}
 function cloudState(value=state){const copy=structuredClone(value);copy.lastView='market';return copy;}
-function meaningful(value){return Boolean(value.selected.length||value.manual.length||value.stock.length||value.checked.length||value.history?.length||value.levels?.length||value.recipes.some(r=>r.origin==='我的厨房笔记')||value.ingredients.some(i=>!SEED_INGREDIENTS.some(seed=>seed.id===i.id)&&i.id!=='cooking-wine'));}
+function meaningful(value){return Boolean(value.selected.length||value.manual.length||value.stock.length||value.checked.length||value.history?.length||value.levels?.length||value.stockEdits?.length||value.recipes.some(r=>r.origin==='我的厨房笔记')||value.ingredients.some(i=>!SEED_INGREDIENTS.some(seed=>seed.id===i.id)&&i.id!=='cooking-wine'));}
 class SyncFailure extends Error{constructor(kind){super(kind);this.kind=kind;}}
 class KitchenCloud{
  constructor(){

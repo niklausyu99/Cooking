@@ -31,6 +31,7 @@ This is a project-specific skill written for this repository. It is not a copied
 - Preserve user-provided recipes. Label supplementary cooking guidance as reference material.
 - Allow recipe creation and editing in the app, including the learning filter; conversation updates can also maintain built-in source data. Preserve readable methods, local method editing, and offline backups.
 - Keep each shopping trip separate from persistent stock levels and dated purchase history. Resetting a trip must never reset either.
+- Fresh inventory uses three discrete stops: 用完了 / 还有 / 很多. Preserve unknown inventory as 待确认; migrate old positive stock to the middle stop. No shopping reset or recipe selection changes these manual states.
 - Long-lasting supplies use manual remaining-level sliders. Recipe selection never invents consumption. Recent purchases need a clear confirmation before buying again.
 
 ## Verify

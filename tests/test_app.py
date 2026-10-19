@@ -116,7 +116,7 @@ class BasketTests(unittest.TestCase):
         self.select('tomato-egg')
         self.tab('pantry')
         self.page.locator('[data-kitchen="fresh"]').click()
-        self.page.locator('[data-pantry-id="egg"] .stock-toggle').click()
+        self.page.locator('[data-pantry-id="egg"] [data-amount="1"]').click()
         self.tab('shopping')
         self.assertEqual(self.page.locator('[data-grocery="egg"]').count(), 0)
         self.page.locator('.stock-excluded summary').click()
@@ -572,20 +572,36 @@ class BasketTests(unittest.TestCase):
         self.assertEqual(self.saved()['history'], [])
         self.assertIn('soy', self.saved()['stock'])
 
-    def test_31_fresh_stock_two_explicit_buttons(self):
+    def test_31_fresh_stock_three_stops_keyboard_and_persistence(self):
         self.tab('pantry')
         self.page.locator('[data-kitchen=fresh]').click()
         card = self.page.locator('[data-pantry-id=egg]')
-        self.assertEqual(card.locator('.stock-choice').count(), 2)
-        card.locator('[data-available=true]').click()
-        card.locator('[data-available=true]').click()
+        slider = card.locator('.fresh-slider')
+        self.assertEqual(card.locator('.fresh-label').count(), 3)
+        expect(card.locator('.inventory-amount')).to_have_text('待确认')
+        self.assertEqual(card.locator('[aria-pressed=true]').count(), 0)
+        # Clicking the middle stop explicitly confirms unknown inventory,
+        # even though the neutral thumb already starts in the middle.
+        slider.click()
         expect(card.locator('.inventory-amount')).to_have_text('还有')
         self.assertIn('egg', self.saved()['stock'])
-        card.locator('[data-available=false]').click()
+        slider.press('ArrowRight')
+        expect(slider).to_have_value('2')
+        expect(card.locator('.inventory-amount')).to_have_text('很多')
+        self.assertEqual(next(e for e in self.saved()['stockEdits'] if e['id']=='egg')['freshAmount'], 2)
+        slider.press('Home')
         expect(card.locator('.inventory-amount')).to_have_text('已用完')
         self.assertNotIn('egg', self.saved()['stock'])
+        card.locator('[data-amount="2"]').click()
+        self.page.evaluate('startNewTrip()')
+        self.page.reload()
+        self.tab('pantry')
+        self.page.locator('[data-kitchen=fresh]').click()
+        expect(slider).to_have_value('2')
+        expect(card.locator('[data-amount="2"]')).to_have_attribute('aria-pressed','true')
         self.assertEqual(self.saved()['history'], [])
         self.assertEqual(len(self.saved()['stockEdits']), 1)
+        self.assertTrue(self.page.evaluate('()=>{validateState(structuredClone(state));return true;}'))
 
     def test_32_history_delete_undo_recipe_purchase_and_later_stock_edit(self):
         self.select('tomato-egg')
@@ -698,6 +714,24 @@ class BasketTests(unittest.TestCase):
         self.tab('market')
         expect(self.page.locator('#market-sort-label')).to_have_text('名称排序')
         expect(trigger).to_have_attribute('aria-expanded','false')
+
+
+
+    def test_37_fresh_stock_legacy_migration_and_receipt_retraction(self):
+        self.page.evaluate("state.stock.push('egg');persist();render()")
+        self.tab('pantry')
+        self.page.locator('[data-kitchen=fresh]').click()
+        expect(self.page.locator('#fresh-egg')).to_have_value('1')
+        expect(self.page.locator('[data-pantry-id=egg] [data-amount="1"]')).to_have_attribute('aria-pressed','true')
+        self.page.evaluate("state.stock=[];addManual('egg');persist();togglePurchase('egg')")
+        self.page.locator('[data-pantry-id=egg] [data-amount="2"]').click()
+        self.page.evaluate("addManual('egg');persist();togglePurchase('egg')")
+        self.assertEqual(self.saved()['history'], [])
+        self.assertEqual(self.page.evaluate("freshStock('egg').amount"),2)
+        self.assertIn('egg',self.saved()['stock'])
+        backup=self.saved()
+        next(e for e in backup['stockEdits'] if e['id']=='egg')['freshAmount']=3
+        self.assertTrue(self.page.evaluate('(s)=>{try{validateState(s);return false;}catch{return true;}}',backup))
 
 
 if __name__ == '__main__':
