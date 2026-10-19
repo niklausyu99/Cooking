@@ -225,5 +225,17 @@ class FamilySyncTests(unittest.TestCase):
         self.assertEqual(page.evaluate('state.manual[0].id'), 'tomato')
 
 
+    def test_multiple_recipe_sources_sync_to_family(self):
+        first = self.device()
+        self.ready(first)
+        second = self.device()
+        self.ready(second)
+        links = ['https://example.com/first', 'https://example.com/second']
+        first.evaluate('(links)=>mutate(()=>{state.recipes[0].sources=links;state.recipes[0].source=links[0];state.recipes[0].origin="我的厨房笔记";})', links)
+        self.sync(first)
+        self.sync(second)
+        self.assertEqual(second.evaluate('state.recipes[0].sources'), links)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

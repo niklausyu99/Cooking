@@ -459,5 +459,55 @@ class BasketTests(unittest.TestCase):
             self.page.locator('#item-dialog [data-action="close"]').click()
 
 
+    def test_26_source_links_auto_append_filter_blanks_and_persist(self):
+        self.page.locator('[data-recipe="tomato-egg"] .art-open').click()
+        self.page.locator('[data-action="edit-recipe"]').click()
+        self.assertEqual(self.page.locator('.source-input').count(), 1)
+        self.page.locator('#edit-source').fill('https://www.xiaohongshu.com/explore/first')
+        self.assertEqual(self.page.locator('.source-input').count(), 2)
+        self.assertEqual(self.page.locator('.source-input').nth(1).input_value(), '')
+        self.page.locator('.source-input').nth(1).fill('https://example.com/recipe')
+        self.assertEqual(self.page.locator('.source-input').count(), 3)
+        self.page.locator('.source-input').nth(0).clear()
+        self.page.locator('.source-input').nth(2).fill('https://www.xiaohongshu.com/explore/second')
+        self.assertEqual(self.page.locator('.source-input').count(), 4)
+        self.page.locator('#recipe-form button[type="submit"]').click()
+        sources = ['https://example.com/recipe', 'https://www.xiaohongshu.com/explore/second']
+        self.assertEqual(self.saved()['recipes'][0]['sources'], sources)
+        self.assertEqual(self.saved()['recipes'][0]['source'], sources[0])
+        self.page.reload()
+        self.page.locator('[data-recipe="tomato-egg"] .art-open').click()
+        links = self.page.locator('#detail-body .detail-source')
+        self.assertEqual(links.count(), 2)
+        self.assertEqual([link.get_attribute('href') for link in links.all()], sources)
+        self.page.locator('[data-action="edit-recipe"]').click()
+        self.assertEqual(self.page.locator('.source-input').count(), 3)
+        self.assertEqual([node.input_value() for node in self.page.locator('.source-input').all()], sources + [''])
+        self.page.locator('.source-input').nth(0).clear()
+        self.page.locator('.source-input').nth(1).clear()
+        self.page.locator('#recipe-form button[type="submit"]').click()
+        self.assertEqual(self.saved()['recipes'][0]['sources'], [])
+        self.assertEqual(self.saved()['recipes'][0]['source'], '')
+        self.page.locator('[data-recipe="tomato-egg"] .art-open').click()
+        self.assertEqual(self.page.locator('#detail-body .detail-source').count(), 0)
+
+    def test_27_legacy_source_migrates_and_unsafe_sources_rejected(self):
+        saved = self.saved()
+        saved['recipes'][0]['source'] = 'https://example.com/old-note'
+        saved['recipes'][0].pop('sources', None)
+        self.page.evaluate('([key,value])=>localStorage.setItem(key,JSON.stringify(value))', [KEY, saved])
+        self.page.reload()
+        self.page.locator('[data-recipe="tomato-egg"] .art-open').click()
+        expect(self.page.locator('#detail-body .detail-source')).to_have_attribute('href', 'https://example.com/old-note')
+        self.page.locator('[data-action="edit-recipe"]').click()
+        self.assertEqual([node.input_value() for node in self.page.locator('.source-input').all()], ['https://example.com/old-note', ''])
+        self.page.locator('#edit-source').fill('javascript:alert(1)')
+        self.page.locator('#recipe-form button[type="submit"]').click()
+        expect(self.page.locator('#recipe-error')).to_be_visible()
+        self.assertEqual(self.saved()['recipes'][0]['source'], 'https://example.com/old-note')
+        saved['recipes'][0]['sources'] = ['javascript:alert(1)']
+        self.assertTrue(self.page.evaluate('(value)=>{try{validateState(value);return false;}catch{return true;}}', saved))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

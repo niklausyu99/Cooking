@@ -53,6 +53,7 @@ dialog{border:1px solid var(--line);padding:0;border-radius:27px;background:var(
 dialog{position:fixed;inset:0;margin:auto;width:min(580px,calc(100% - 32px));max-height:calc(100dvh - 40px);border:1px solid var(--line);border-radius:24px}
 .item-autocomplete{position:relative}.item-suggestions{position:absolute;top:calc(100% + 7px);left:0;right:0;max-height:min(280px,35dvh);overflow-y:auto;overscroll-behavior:contain;background:var(--white);border:1px solid #c8d2b8;border-radius:14px;padding:5px;box-shadow:0 12px 28px #26351e12;z-index:12}.item-suggestion{width:100%;display:flex;align-items:center;text-align:left;gap:12px;min-height:65px;padding:10px;border-radius:10px}.item-suggestion:hover,.item-suggestion[aria-selected="true"]{background:var(--pale)}.item-suggestion>.food-icon{width:32px;height:32px}.item-suggestion>span:nth-child(2){flex:1;min-width:0}.item-suggestion strong{display:block;font-size:14px;font-weight:550;overflow-wrap:anywhere}.item-suggestion small{display:block;font-size:12px;color:var(--muted);margin-top:2px}.suggestion-stock{font-size:12px;color:var(--olive);white-space:nowrap}.suggestion-empty{padding:14px 12px;font-size:13px;color:var(--muted);line-height:1.8}.kitchen-heading-actions{display:flex;align-items:center;gap:5px}.kitchen-heading-actions .quiet-btn{padding:8px}.kitchen-heading-actions .button{font-size:13px;padding:10px 12px}#item-level-section{margin:7px 0 22px}#item-level-section .inventory-slider{accent-color:var(--olive)}#item-level::-webkit-slider-runnable-track{background:var(--line);height:5px;border-radius:5px}#item-level::-moz-range-track{background:var(--line);height:5px;border-radius:5px}
 @media(max-width:760px){dialog{inset:0;margin:auto;width:calc(100% - 28px);max-height:calc(100dvh - 32px);border:1px solid var(--line);border-radius:23px}.kitchen-backup-label{display:none}.kitchen-heading-actions>.quiet-btn{width:44px}.item-suggestion{min-height:64px;gap:10px;padding:10px}.item-suggestions{max-height:min(256px,33dvh)}.dialog-head{padding:13px 16px 11px}.dialog-body{padding:19px 18px 25px}.dialog-art{margin:-19px -18px 21px}.detail-actions{bottom:-25px}.dialog-head h2{font-size:18px}}
+.source-rows{display:grid;gap:10px}.detail-sources .detail-source{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;margin:0;padding:12px 0;border-bottom:1px solid var(--line)}.detail-source>span{flex-shrink:0}.detail-source small{font-size:12px;color:var(--muted);overflow-wrap:anywhere;text-align:right}
 </style>
 </head>
 <body>
@@ -129,7 +130,7 @@ dialog{position:fixed;inset:0;margin:auto;width:min(580px,calc(100% - 32px));max
  <div class="field"><span>食材</span><span class="field-help">番茄／西红柿、红萝卜／胡萝卜、排骨／煲汤骨会自动认成同一种。数量可留空，表示适量。</span><div class="editor-labels"><span>名称</span><span>数量</span><span>单位</span><span></span></div><div id="ingredient-rows"></div><button type="button" class="button secondary" data-action="ingredient-row"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>再加一样食材</button></div>
  <label class="field">怎么煮<textarea id="edit-steps" rows="5" maxlength="16000" placeholder="每行写一步，下次照着煮。也可以先留空，学会后慢慢补。"></textarea></label>
  <label class="field">我的小提醒<textarea id="edit-note" rows="2" maxlength="4000" placeholder="例如：酸梅酱版本不用八角"></textarea></label>
- <label class="field">来源链接（选填）<input id="edit-source" type="url" maxlength="2000" placeholder="https://…"><span class="field-help">只保存链接；小红书的做法可以自己整理在上面。</span></label>
+ <div class="field"><label for="edit-source">来源链接（选填）</label><div id="source-rows" class="source-rows"></div><span class="field-help">可留多个参考链接，填好一条就会多一行；空白行不会保存。</span></div>
  <label class="checkbox-field"><input type="checkbox" id="edit-learning" checked>这道还在学，做的时候多看看步骤</label>
  <p id="recipe-error" class="form-error" hidden role="alert"></p><button type="submit" class="button primary full">收进我的菜谱<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
 </form></div></dialog>
@@ -260,6 +261,7 @@ function validateState(s){
  if(!array(s.manual,2000)||s.manual.some(x=>!x||!ingIds.has(x.id)||!str(x.note,100))||new Set(s.manual.map(x=>x.id)).size!==s.manual.length)fail();
  if(!array(s.variants,500)||s.variants.some(x=>!x||!recipeIds.has(x.recipeId)||!s.recipes.find(r=>r.id===x.recipeId).variants?.some(v=>v.id===x.variantId))||new Set(s.variants.map(x=>x.recipeId)).size!==s.variants.length)fail();
  if(s.lastView!==undefined&&!['market','recipes','shopping','pantry'].includes(s.lastView))fail();
+ for(const r of s.recipes)if(r.sources!==undefined&&(!array(r.sources,50)||r.sources.some(url=>!str(url,2000)||!url.trim()||!safeURL(url))))fail();
  validateExtraFields(s,ingIds);
  return {...structuredClone(s),lastView:s.lastView||'market'};
 }
@@ -398,7 +400,7 @@ function closeDialog(dialog){if(dialog.id==='editor-dialog'&&dirtyEditor){confir
 function showDetail(id){
  const base=recipe(id);if(!base)return;detailId=id;const r=effective(base),chosen=state.selected.includes(id);
  const variants=r.variants?`<div class="variant-picker" role="group" aria-label="五花肉配方版本">${r.variants.map(v=>`<button class="${v.id===r.activeVariant.id?'active':''}" data-action="variant" data-id="${esc(id)}" data-variant="${esc(v.id)}" aria-pressed="${v.id===r.activeVariant.id}">${esc(v.label)}</button>`).join('')}</div>`:'';
- $('#detail-body').innerHTML=`<div class="dialog-art">${illustration(base)}</div><div class="recipe-detail-heading"><div><h2>${esc(r.title)}</h2><p class="detail-sub">${r.time} 分钟 · 当前按 ${state.servings} 人份${r.learning?' · 这道还在学':''}</p></div><button class="quiet-btn" data-action="edit-recipe" data-id="${esc(id)}">${icon('edit')}编辑</button></div>${variants}<div class="detail-section"><h3>要准备什么</h3><div class="detail-ingredients">${r.ingredients.map(a=>{const i=ingredient(a.id);return `<div class="detail-ingredient">${foodIcon(i.art)}<span>${esc(i.name)}</span><span class="amount">${esc(quantity(a.qty===null?null:a.qty*state.servings/r.servings,a.unit))}</span></div>`;}).join('')}</div></div><div class="detail-section"><h3>怎么煮</h3><p class="method-note">${esc(r.origin)}。份量和时间为家庭锅具参考，按食量和软烂程度调整。</p>${r.steps.length?`<ol class="steps">${r.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>`:'<p class="pantry-intro">做法还没记，学会后点「编辑」补上，下次就能照着煮。</p>'}</div>${r.note?`<div class="recipe-note">${esc(r.note)}</div>`:''}${safeURL(r.source)?`<a class="detail-source" href="${esc(safeURL(r.source))}" target="_blank" rel="noopener noreferrer">打开原来的学习笔记</a>`:''}<div class="detail-actions"><button class="button secondary" data-action="learning" data-id="${esc(id)}" aria-pressed="${r.learning}">${r.learning?'已标在学':'标为在学'}</button><button class="button primary" data-action="detail-select" data-id="${esc(id)}">${icon(chosen?'check':'plus')}${chosen?'已选，点击移出菜单':'加入这趟菜单'}</button></div>`;
+ $('#detail-body').innerHTML=`<div class="dialog-art">${illustration(base)}</div><div class="recipe-detail-heading"><div><h2>${esc(r.title)}</h2><p class="detail-sub">${r.time} 分钟 · 当前按 ${state.servings} 人份${r.learning?' · 这道还在学':''}</p></div><button class="quiet-btn" data-action="edit-recipe" data-id="${esc(id)}">${icon('edit')}编辑</button></div>${variants}<div class="detail-section"><h3>要准备什么</h3><div class="detail-ingredients">${r.ingredients.map(a=>{const i=ingredient(a.id);return `<div class="detail-ingredient">${foodIcon(i.art)}<span>${esc(i.name)}</span><span class="amount">${esc(quantity(a.qty===null?null:a.qty*state.servings/r.servings,a.unit))}</span></div>`;}).join('')}</div></div><div class="detail-section"><h3>怎么煮</h3><p class="method-note">${esc(r.origin)}。份量和时间为家庭锅具参考，按食量和软烂程度调整。</p>${r.steps.length?`<ol class="steps">${r.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>`:'<p class="pantry-intro">做法还没记，学会后点「编辑」补上，下次就能照着煮。</p>'}</div>${r.note?`<div class="recipe-note">${esc(r.note)}</div>`:''}${recipeSources(r).length?`<div class="detail-section detail-sources"><h3>参考来源</h3>${recipeSources(r).map((url,index)=>`<a class="detail-source" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><span>${recipeSources(r).length===1?'打开原来的学习笔记':'学习笔记 '+(index+1)}</span><small>${esc(new URL(url).hostname)}</small></a>`).join('')}</div>`:''}<div class="detail-actions"><button class="button secondary" data-action="learning" data-id="${esc(id)}" aria-pressed="${r.learning}">${r.learning?'已标在学':'标为在学'}</button><button class="button primary" data-action="detail-select" data-id="${esc(id)}">${icon(chosen?'check':'plus')}${chosen?'已选，点击移出菜单':'加入这趟菜单'}</button></div>`;
  showDialog($('#detail-dialog'));
 }
 function ingredientRow(data={}){
@@ -406,10 +408,21 @@ function ingredientRow(data={}){
  row.innerHTML=`<input class="ing-name" aria-label="食材名称" list="ingredient-suggestions" maxlength="60" placeholder="食材" value="${esc(data.name||'')}"><input class="ing-qty" aria-label="食材数量" type="number" min="0.01" max="100000" step="any" placeholder="适量" value="${data.qty??''}"><input class="ing-unit" aria-label="食材单位" maxlength="30" placeholder="g / 个" value="${esc(data.unit||'')}"><button type="button" data-action="remove-ingredient" aria-label="移除这行食材">${icon('close')}</button>`;
  $('#ingredient-rows').append(row);
 }
+function recipeSources(r){return [...new Set((Array.isArray(r?.sources)?r.sources:r?.source?[r.source]:[]).map(safeURL).filter(Boolean))];}
+function appendSourceRow(value=''){
+ const input=document.createElement('input'),index=$$('.source-input',$('#source-rows')).length;
+ input.type='url';input.maxLength=2000;input.placeholder='https://…';input.value=value;input.className='source-input';input.id=index?'edit-source-'+index:'edit-source';input.setAttribute('aria-label','来源链接 '+(index+1));input.setAttribute('autocapitalize','off');input.setAttribute('spellcheck','false');
+ $('#source-rows').append(input);
+}
+function setSourceRows(links){$('#source-rows').replaceChildren();links.forEach(appendSourceRow);if(links.length<50)appendSourceRow();}
+$('#source-rows').addEventListener('input',()=>{
+ const inputs=$$('.source-input',$('#source-rows'));
+ if(inputs.length<50&&inputs.at(-1).value.trim())appendSourceRow();
+});
 function editRecipe(id){
  if($('#detail-dialog').open)$('#detail-dialog').close();
  const r=id?effective(recipe(id)):null;$('#recipe-form').reset();$('#edit-recipe-id').value=id||'';$('#editor-title').textContent=r?'编辑我的做法':'记一道新菜';
- $('#edit-title').value=r?.title||'';$('#edit-type').value=r?.type||'dish';$('#edit-emoji').value=r?.emoji||'dish';$('#edit-time').value=r?.time||20;$('#edit-servings').value=r?.servings||2;$('#edit-description').value=r?.description||'';$('#edit-steps').value=r?.steps.join('\n')||'';$('#edit-note').value=r?.note||'';$('#edit-source').value=r?.source||'';$('#edit-learning').checked=r?.learning??true;$('#recipe-error').hidden=true;
+ $('#edit-title').value=r?.title||'';$('#edit-type').value=r?.type||'dish';$('#edit-emoji').value=r?.emoji||'dish';$('#edit-time').value=r?.time||20;$('#edit-servings').value=r?.servings||2;$('#edit-description').value=r?.description||'';$('#edit-steps').value=r?.steps.join('\n')||'';$('#edit-note').value=r?.note||'';setSourceRows(recipeSources(r));$('#edit-learning').checked=r?.learning??true;$('#recipe-error').hidden=true;
  $('#ingredient-rows').replaceChildren();if(r)r.ingredients.forEach(a=>ingredientRow({...a,name:ingredient(a.id).name,unit:a.qty===null?'':a.unit}));else{ingredientRow();ingredientRow();}
  updateSuggestions();dirtyEditor=false;showDialog($('#editor-dialog'));
 }
@@ -423,7 +436,9 @@ $('#recipe-form').addEventListener('submit',event=>{
  event.preventDefault();const title=$('#edit-title').value.trim();if(!title)return formError('#recipe-error','先给这道菜起个名字。');
  const rows=$$('.ingredient-editor',$('#ingredient-rows'));const validRows=rows.filter(row=>$('.ing-name',row).value.trim());if(!validRows.length)return formError('#recipe-error','至少记下一样食材。');
  if(state.recipes.length>=500&&!$('#edit-recipe-id').value)return formError('#recipe-error','菜谱已达 500 道，请先备份或整理。');
- const source=$('#edit-source').value.trim();if(source&&!safeURL(source))return formError('#recipe-error','来源链接请使用 https:// 或 http://。');
+ const filledSources=$$('.source-input',$('#source-rows')).map(input=>input.value.trim()).filter(Boolean);
+ if(filledSources.some(url=>!safeURL(url)))return formError('#recipe-error','来源链接请使用 https:// 或 http://。');
+ const sources=[...new Set(filledSources.map(safeURL))];
  const additions=[],used=new Set(),ingredients=[];
  for(const row of validRows){
   const name=$('.ing-name',row).value.trim(),q=$('.ing-qty',row).value,qty=q===''?null:Number(q),unit=$('.ing-unit',row).value.trim()||(qty===null?'适量':'份');
@@ -433,7 +448,7 @@ $('#recipe-form').addEventListener('submit',event=>{
   if(used.has(item.id))return formError('#recipe-error',`${name} 重复了，请合并在同一行。`);used.add(item.id);ingredients.push({id:item.id,qty,unit});
  }
  const id=$('#edit-recipe-id').value||uid('r'),original=recipe(id),steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean);
- const values={title,type:$('#edit-type').value,emoji:$('#edit-emoji').value,servings:Number($('#edit-servings').value),time:Number($('#edit-time').value),description:$('#edit-description').value.trim(),ingredients,steps,note:$('#edit-note').value.trim(),origin:'我的厨房笔记',learning:$('#edit-learning').checked,source:safeURL(source)};
+ const values={title,type:$('#edit-type').value,emoji:$('#edit-emoji').value,servings:Number($('#edit-servings').value),time:Number($('#edit-time').value),description:$('#edit-description').value.trim(),ingredients,steps,note:$('#edit-note').value.trim(),origin:'我的厨房笔记',learning:$('#edit-learning').checked,source:sources[0]||'',sources};
  mutate(()=>{
   state.ingredients.push(...additions);
   if(original){const r=effective(original);if(original.variants){original.variants=original.variants.map(v=>v.id===r.activeVariant.id?{...v,ingredients,steps}:v);}Object.assign(original,values);}
