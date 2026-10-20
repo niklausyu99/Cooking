@@ -28,7 +28,7 @@ This is a project-specific skill written for this repository. It is not a copied
 - Navigation order: market, list, recipes, kitchen. Kitchen refresh keeps its tab; leaving and re-entering defaults to lasting supplies.
 - Market floating basket previews pending items and permits per-trip removal with an in-dialog undo. Full-list purchase checks remain separate. Do not mark stock available to hide a trip item.
 - Keep checked purchases, ingredients already at home, and ingredients needing replenishment distinct.
-- Merge shared ingredient identities. 排骨 and 煲汤骨 are interchangeable here. Do not add 山药汤.
+- Merge genuine ingredient aliases, but keep 排骨 and 煲汤骨 separate for shopping, inventory and history. Preserve old combined records on 排骨 without copying stock to 煲汤骨. Do not add 山药汤.
 - State serving assumptions. Do not silently invent the user's preferences or cupboard contents.
 - Preserve user-provided recipes. Label supplementary cooking guidance as reference material.
 - Allow recipe creation and editing in the app, including the learning filter; conversation updates can also maintain built-in source data. Preserve readable methods, local method editing, and offline backups.

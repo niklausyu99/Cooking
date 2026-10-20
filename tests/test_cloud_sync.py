@@ -378,5 +378,41 @@ class FamilySyncTests(unittest.TestCase):
         expect(page.locator('#cloud-link-feedback')).to_be_hidden()
 
 
+    def test_catalog_upgrade_does_not_mistake_seed_additions_for_unsent_family_edits(self):
+        page = self.device()
+        self.ready(page)
+        old = page.evaluate('structuredClone(state)')
+        old['recipes'] = [r for r in old['recipes'] if r['id'] not in ['lazi-ji', 'pepper-pork', 'ramen-chashu']]
+        new_ids = {'yogurt', 'dark-chocolate', 'mixed-nuts', 'chicken-thigh', 'green-chili', 'dried-chili', 'sichuan-pepper', 'white-pepper', 'starch', 'sesame', 'black-beans', 'sake'}
+        old['ingredients'] = [i for i in old['ingredients'] if i['id'] not in new_ids]
+        old['catalogVersion'] = 2026101903
+        old['manual'] = [{'id': 'tomato', 'note': '旧清单'}]
+        remote = copy.deepcopy(old)
+        remote['manual'].append({'id': 'potato', 'note': '家人刚加的'})
+        self.db[KEY_A].update(revision=5, state=remote)
+        page.evaluate("""fixture=>{
+            localStorage.setItem(familyStorageKey(cloudEngine.connection.familyId),JSON.stringify(fixture));
+            localStorage.setItem(cloudEngine.metaKey(),JSON.stringify({revision:4,base:fixture,lastSync:null}));
+        }""", old)
+        page.reload()
+        self.ready(page)
+        self.assertIsNone(page.evaluate('cloudEngine.conflict'))
+        self.assertEqual(page.evaluate('state.manual'), remote['manual'])
+        self.assertEqual(len(page.evaluate('state.recipes')), 14)
+        self.assertEqual(self.db[KEY_A]['state']['manual'], remote['manual'])
+        self.assertEqual(len(self.db[KEY_A]['state']['recipes']), 14)
+        # A genuine offline edit still requires a choice; migration must not hide it.
+        pending = copy.deepcopy(old)
+        pending['manual'].append({'id': 'banana', 'note': '还没同步的修改'})
+        page.evaluate("""({cached,baseline})=>{
+            localStorage.setItem(familyStorageKey(cloudEngine.connection.familyId),JSON.stringify(cached));
+            localStorage.setItem(cloudEngine.metaKey(),JSON.stringify({revision:4,base:baseline,lastSync:null}));
+        }""", {'cached': pending, 'baseline': old})
+        page.reload()
+        expect(page.locator('#cloud-button-label')).to_have_text('需要确认')
+        expect(page.locator('#cloud-conflict')).to_be_visible()
+        self.assertEqual(self.db[KEY_A]['state']['manual'], remote['manual'])
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

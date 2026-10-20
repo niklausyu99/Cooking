@@ -10,7 +10,7 @@ To check installation integrity, run `python3 scripts/verify_design_capabilities
 
 The deliverable is `little-basket.html`, a single offline-capable, mobile-first HTML file with no build step. Production builds add the manifest, icons and service worker from `pwa/` for installation; run `python3 scripts/build_site.py --require-cloud` and `python3 tests/test_pwa.py` for that path. Use the existing checkout; no additional worktree is needed.
 
-Respect the user's recipe notes. Do not add yam soup. Use a shared ingredient identity for pork ribs / soup bones. Keep pantry inventory, planned ingredients, and purchased groceries distinct.
+Respect the user's recipe notes. Do not add yam soup. Keep pork ribs (bones) and soup bones (soup-bones) as separate ingredient identities. Old combined records stay with bones; never duplicate their stock/history into soup-bones. Keep pantry inventory, planned ingredients, and purchased groceries distinct.
 
 Treat this as a phone app. Main navigation is market, current list, recipes, and kitchen (stock levels / fresh inventory / 30-day history). A trip reset clears the current plan only. Buying is recorded on check, not on adding to the cart. Long-lasting levels are manual and persistent; selecting recipes never decrements them. New recipes can be added and edited in the app or maintained through conversation and stable built-in IDs, preserving browser data during upgrades.
 
@@ -19,3 +19,5 @@ Run `python3 tests/test_app.py` for material interaction changes. Test narrow mo
 Kitchen tabs survive refresh in the current window; leaving and re-entering kitchen starts at lasting supplies. Market basket preview is limited to pending items and removal; purchase checks stay in the full list. Per-trip omitted ingredient IDs are optional `trip.omitted`, must survive sync/import, and disappear with trip reset. Never use pantry stock to fake removal from a trip.
 
 Per-item procurement notes (`trip.itemNotes`) and the trip note (`trip.note`) are optional, shared by preview/full list, and clear only with trip reset. Persist typing without replacing focused inputs; defer remote pulls and automatic resets while editing notes.
+
+Basket artwork reflects unique items in the current list, including purchased items; its badge counts pending items. Reuse the eight embedded WebP frames for the full list and floating basket. Motion never writes household data; respect reduced motion and clean up flights on navigation. A second tap on an already-added market item or selected recipe confirms removal and stays on the current screen.

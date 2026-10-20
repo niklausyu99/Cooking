@@ -30,5 +30,33 @@
   {
     "key": "hero-01",
     "path": "assets/illustrations/source/hero-01.png"
+  },
+  {
+    "key": "dishes-04",
+    "path": "assets/illustrations/source/dishes-04.png"
+  },
+  {
+    "key": "ingredients-05",
+    "path": "assets/illustrations/source/ingredients-05.png"
+  },
+  {
+    "key": "ingredients-06",
+    "path": "assets/illustrations/source/ingredients-06.png"
+  },
+  {
+    "key": "basket-stages",
+    "path": "assets/illustrations/source/basket-stages.png"
+  },
+  {
+    "key": "hero-basket-full",
+    "path": "assets/illustrations/source/hero-basket-full.png"
+  },
+  {
+    "key": "ingredients-07",
+    "path": "assets/illustrations/source/ingredients-07.png"
+  },
+  {
+    "key": "ingredients-08",
+    "path": "assets/illustrations/source/ingredients-08.png"
   }
 ]

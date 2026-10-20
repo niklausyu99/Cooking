@@ -70,7 +70,7 @@ class BasketTests(unittest.TestCase):
         return self.page.evaluate('(k)=>JSON.parse(localStorage.getItem(k))', KEY)
 
     def test_01_initial_recipes_and_no_assumed_inventory(self):
-        self.assertEqual(self.page.locator('.recipe-card').count(), 11)
+        self.assertEqual(self.page.locator('.recipe-card').count(), 14)
         self.assertEqual(self.saved()['stock'], [])
         self.assertNotIn('山药', self.page.locator('#recipes-view').inner_text())
         self.assertIn('清炒薯苗', self.page.locator('#recipe-grid').inner_text())
@@ -88,7 +88,7 @@ class BasketTests(unittest.TestCase):
         self.page.get_by_label('清单增加一人', exact=True).click()
         self.assertEqual(self.page.locator('[data-grocery="potato"] .grocery-qty').inner_text(), '4.5 个')
 
-    def test_03_soup_bones_are_one_identity(self):
+    def test_03_ribs_merge_but_soup_bones_have_a_separate_identity(self):
         self.select('tomato-soup')
         self.select('lotus-soup')
         self.tab('shopping')
@@ -99,7 +99,11 @@ class BasketTests(unittest.TestCase):
         self.page.locator('#item-qty').fill('请老板斩小块')
         self.page.locator('#item-form button[type="submit"]').click()
         self.assertEqual(self.page.locator('[data-grocery="bones"]').count(), 1)
-        self.assertIn('请老板斩小块', self.page.locator('[data-grocery="bones"]').inner_text())
+        self.assertEqual(self.page.locator('[data-grocery="soup-bones"]').count(), 1)
+        self.assertIn('请老板斩小块', self.page.locator('[data-grocery="soup-bones"]').inner_text())
+        self.assertNotIn('请老板斩小块', self.page.locator('[data-grocery="bones"]').inner_text())
+        self.assertEqual(self.page.evaluate("findIngredient('排骨').id"), 'bones')
+        self.assertEqual(self.page.evaluate("findIngredient('煲汤骨').id"), 'soup-bones')
 
     def test_04_purchase_progress_survives_reload_and_quantity_change(self):
         self.select('tomato-soup')
@@ -156,13 +160,13 @@ class BasketTests(unittest.TestCase):
         self.page.locator('#edit-source').fill('https://www.xiaohongshu.com/')
         self.page.locator('#edit-learning').check()
         self.page.locator('#recipe-form button[type="submit"]').click()
-        self.assertEqual(self.page.locator('.recipe-card').count(), 11)
+        self.assertEqual(self.page.locator('.recipe-card').count(), 14)
         added = self.saved()['recipes'][0]
         self.assertEqual(added['ingredients'][0]['id'], 'tomato')
         self.assertTrue(added['learning'])
         self.page.locator('[data-filter="learning"]').click()
-        self.assertEqual(self.page.locator('.recipe-card').count(), 1)
-        self.page.locator('.recipe-card .art-open').click()
+        self.assertEqual(self.page.locator('.recipe-card').count(), 4)
+        self.page.locator('[data-recipe="tomato-egg"] .art-open').click()
         self.assertEqual(self.page.locator('#detail-body .steps li').count(), 2)
         self.page.locator('[data-action="edit-recipe"]').click()
         self.page.locator('#edit-title').fill('我的番茄豆腐')
@@ -214,7 +218,7 @@ class BasketTests(unittest.TestCase):
         self.page.get_by_label('重置选购清单', exact=True).click()
         self.page.locator('#confirm-button').click()
         self.assertEqual(self.saved()['selected'], [])
-        self.assertEqual(len(self.saved()['recipes']), 11)
+        self.assertEqual(len(self.saved()['recipes']), 14)
 
     def test_11_responsive_views_dialogs_and_touch_targets(self):
         for width in [320, 360, 390, 430, 768, 1024, 1440]:
@@ -275,8 +279,11 @@ class BasketTests(unittest.TestCase):
         self.tab('market')
         self.page.locator('[data-market-id="tomato"] .market-add').click()
         self.page.locator('[data-market-id="tomato"] .market-add').click()
+        expect(self.page.locator('#confirm-dialog')).to_be_visible()
+        self.page.keyboard.press('Escape')
         self.assertEqual(len(self.saved()['manual']), 1)
         self.assertEqual(self.page.locator('[data-grocery="tomato"]').count(), 1)
+        self.tab('shopping')
         self.page.get_by_role('button', name='加一样', exact=True).click()
         self.page.locator('#item-name').fill('牛奶')
         self.page.locator('#item-category').select_option('protein')
@@ -367,10 +374,11 @@ class BasketTests(unittest.TestCase):
 
     def test_20_old_backup_migrates_without_losing_menu(self):
         self.select('tomato-soup')
-        self.page.evaluate("""k=>{let s=JSON.parse(localStorage.getItem(k));for(const n of ['history','levels','trip','autoReset','checkLinks','confirmedStock'])delete s[n];s.recipes=s.recipes.filter(r=>r.id!=='cress-soup');s.ingredients=s.ingredients.filter(i=>i.id!=='cooking-wine');localStorage.setItem(k,JSON.stringify(s));}""", KEY)
+        # This legacy catalog predates the new dishes that require cooking wine.
+        self.page.evaluate("""k=>{let s=JSON.parse(localStorage.getItem(k));for(const n of ['history','levels','trip','autoReset','checkLinks','confirmedStock'])delete s[n];s.recipes=s.recipes.filter(r=>!['cress-soup','lazi-ji','pepper-pork','ramen-chashu'].includes(r.id));s.ingredients=s.ingredients.filter(i=>i.id!=='cooking-wine');s.catalogVersion=2026101901;localStorage.setItem(k,JSON.stringify(s));}""", KEY)
         self.page.reload()
         self.assertEqual(self.saved()['selected'], ['tomato-soup'])
-        self.assertEqual(len(self.saved()['recipes']), 11)
+        self.assertEqual(len(self.saved()['recipes']), 14)
         self.assertTrue(any(i['id'] == 'cooking-wine' for i in self.saved()['ingredients']))
         self.assertEqual(self.saved()['history'], [])
 
@@ -643,7 +651,7 @@ class BasketTests(unittest.TestCase):
     def test_34_food_assets_are_padded_and_not_stored_in_family_data(self):
         from PIL import Image
         manifest = json.loads((ROOT / 'assets/illustrations/manifest.json').read_text())
-        self.assertEqual(len(manifest['assets']), 55)
+        self.assertEqual(len(manifest['assets']), 80)
         for asset in manifest['assets']:
             image = Image.open(ROOT / asset['file']).convert('RGBA')
             box = image.getchannel('A').getbbox()
@@ -653,7 +661,7 @@ class BasketTests(unittest.TestCase):
             self.assertLess(box[2], image.width * .925)
             self.assertLess(box[3], image.height * .925)
         self.assertNotIn('data:image', json.dumps(self.saved()))
-        self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 55)
+        self.assertEqual(self.page.locator('defs image[id^=food-]').count(), 80)
 
 
     def test_35_catalog_upgrade_keeps_custom_identity_and_stock(self):
@@ -1019,11 +1027,11 @@ class BasketTests(unittest.TestCase):
         self.page.locator('[data-market-id=blueberry] .market-add').click()
         before = self.saved()
         peek = self.page.locator('#basket-peek')
-        self.assertEqual(peek.bounding_box()['width'], 64)
+        self.assertEqual(peek.bounding_box()['width'], 76)
         self.page.evaluate('window.scrollTo({top:300,behavior:"instant"})')
         expect(peek).to_have_class('basket-peek is-compact')
-        self.assertEqual(peek.bounding_box()['width'], 44)
-        self.assertEqual(peek.bounding_box()['height'], 44)
+        self.assertEqual(peek.bounding_box()['width'], 56)
+        self.assertEqual(peek.bounding_box()['height'], 56)
         expect(self.page.locator('#basket-peek-count')).to_have_text('1')
         expect(peek).to_have_attribute('aria-label', '快速预览清单，待买 1 样')
         self.page.screenshot(path=str(RESULTS / 'basket-compact-390.png'))
@@ -1049,9 +1057,287 @@ class BasketTests(unittest.TestCase):
         self.page.set_viewport_size({'width': 1440, 'height': 844})
         self.page.evaluate('window.scrollTo({top:300,behavior:"instant"})')
         expect(peek).to_have_class('basket-peek')
-        self.assertEqual(peek.bounding_box()['width'], 68)
+        self.assertEqual(peek.bounding_box()['width'], 76)
         self.assertEqual(peek.evaluate('(el)=>getComputedStyle(el).transitionDuration'), '0s')
         self.assertEqual(self.saved(), before)
+
+
+    def test_48_requested_food_and_learning_recipes_have_sources_art_and_merged_groceries(self):
+        self.page.locator('[data-filter=learning]').click()
+        self.assertEqual(set(self.page.locator('.recipe-card').evaluate_all('(nodes)=>nodes.map(e=>e.dataset.recipe)')), {'lazi-ji', 'pepper-pork', 'ramen-chashu'})
+        for key, count in [('lazi-ji', 6), ('pepper-pork', 5), ('ramen-chashu', 6)]:
+            card = self.page.locator(f'[data-recipe="{key}"]')
+            expect(card.locator(f'use[href="#food-dish-{key}"]')).to_have_count(1)
+            card.locator('.recipe-title').click()
+            expect(self.page.locator('#detail-body .steps li')).to_have_count(count)
+            self.assertGreaterEqual(self.page.locator('.detail-source').count(), 1)
+            self.page.locator('[aria-label="关闭菜谱"]').click()
+        self.tab('market')
+        for key, name in [('yogurt', '酸奶'), ('dark-chocolate', '黑巧克力'), ('mixed-nuts', '坚果')]:
+            self.page.locator('#market-search').fill(name)
+            expect(self.page.locator('.market-card')).to_have_count(1)
+            expect(self.page.locator(f'[data-market-id="{key}"] use[href="#food-ingredient-{key}"]')).to_have_count(1)
+            self.assertNotIn(key, self.saved()['stock'])
+            self.assertFalse(any(level['id'] == key for level in self.saved()['levels']))
+        self.page.locator('#market-search').fill('')
+        self.assertFalse(self.page.evaluate("longLasting(ingredient('yogurt'))"))
+        self.assertTrue(self.page.evaluate("longLasting(ingredient('mixed-nuts')) && longLasting(ingredient('dark-chocolate'))"))
+        self.tab('recipes')
+        self.select('lazi-ji')
+        self.select('pepper-pork')
+        self.select('ramen-chashu')
+        self.tab('shopping')
+        self.assertEqual(self.page.locator('[data-grocery=soy]').count(), 1)
+        self.assertEqual(self.page.locator('[data-grocery=belly]').count(), 1)
+        expect(self.page.locator('[data-grocery=belly] .grocery-qty')).to_have_text('750 g')
+        self.assertEqual(self.saved()['history'], [])
+        self.assertEqual(self.saved()['stock'], [])
+        self.page.evaluate('validateState(state)')
+
+    def test_49_catalog_upgrade_reuses_custom_food_ids_in_new_recipe_references(self):
+        self.page.evaluate("""() => {
+            const newIds=['yogurt','dark-chocolate','mixed-nuts','chicken-thigh','green-chili','dried-chili','sichuan-pepper','white-pepper','starch','sesame','black-beans','sake'];
+            state.ingredients=state.ingredients.filter(i=>!newIds.includes(i.id));
+            state.recipes=state.recipes.filter(r=>!['lazi-ji','pepper-pork','ramen-chashu'].includes(r.id));
+            state.ingredients.push(I('my-yogurt','酸乳','jar','snacks'),I('my-chicken','去骨鸡腿肉','meat','protein'),I('my-pepper','青椒','jar','produce'));
+            state.stock=['my-chicken'];state.manual=[{id:'my-yogurt',note:'原来的采购备注'}];
+            state.trip.note='不要覆盖今天的清单';
+            state.stockEdits=[{id:'my-chicken',updatedAt:new Date().toISOString(),freshAmount:1}];
+            state.history=[{id:'my-old-receipt',ingredientId:'my-yogurt',boughtAt:new Date().toISOString(),tripId:state.trip.id,amount:'1 盒',previousStock:false,previousLevel:null,levelStamp:null}];
+            const edited=recipe('tomato-egg');edited.steps=['我自己的番茄炒蛋'];edited.origin='我的厨房笔记';edited.learning=true;
+            state.catalogVersion=2026101903;persist();
+        }""")
+        before = self.saved()
+        self.page.reload()
+        after = self.saved()
+        for field in ['stock', 'manual', 'trip', 'history', 'levels', 'stockEdits']:
+            self.assertEqual(after[field], before[field])
+        for canonical in ['yogurt', 'chicken-thigh', 'green-chili']:
+            self.assertFalse(any(i['id'] == canonical for i in after['ingredients']))
+        self.assertEqual(self.page.evaluate("findIngredient('鸡腿肉').id"), 'my-chicken')
+        self.assertIn('my-chicken', self.page.evaluate("recipe('lazi-ji').ingredients.map(i=>i.id)"))
+        self.assertIn('my-pepper', self.page.evaluate("recipe('pepper-pork').ingredients.map(i=>i.id)"))
+        self.assertEqual(self.page.evaluate("recipe('tomato-egg').steps"), ['我自己的番茄炒蛋'])
+        self.page.evaluate('validateState(state)')
+        self.page.evaluate("recipe('lazi-ji').steps=['我调整过的辣子鸡'];recipe('lazi-ji').origin='我的厨房笔记';recipe('lazi-ji').learning=false;state.catalogVersion=2026101903;persist()")
+        self.page.reload()
+        self.assertEqual(self.page.evaluate("recipe('lazi-ji').steps"), ['我调整过的辣子鸡'])
+        self.assertFalse(self.page.evaluate("recipe('lazi-ji').learning"))
+        self.page.evaluate('validateState(state)')
+
+
+    def test_50_bone_split_preserves_legacy_records_without_copying_stock(self):
+        self.page.evaluate("""()=>{
+            state.manual=[{id:'bones',note:'请老板斩块'}];render();setView('shopping');
+        }""")
+        self.page.locator('[data-grocery=bones] .purchase-check').click()
+        self.page.evaluate("""()=>{
+            state.ingredients=state.ingredients.filter(i=>i.id!=='soup-bones');
+            const old=ingredient('bones');old.name='排骨／煲汤骨';old.aliases=['排骨','煲汤骨','猪骨','猪骨头','汤骨','排骨 / 煲汤骨','排骨或煲汤骨'];
+            state.trip.itemNotes=[{id:'bones',note:'原来的备注'}];state.catalogVersion=2026102001;persist();
+        }""")
+        before=self.saved()
+        self.page.reload()
+        after=self.saved()
+        for key in ['history','stock','checked','manual','checkLinks','stockEdits','levels','trip']:
+            self.assertEqual(after[key],before[key])
+        self.assertEqual(self.page.evaluate("findIngredient('排骨').id"),'bones')
+        for alias in ['煲汤骨','汤骨','猪骨','猪骨头']:
+            self.assertEqual(self.page.evaluate('(name)=>findIngredient(name).id',alias),'soup-bones')
+        self.assertNotIn('soup-bones',after['stock'])
+        self.assertFalse(any(h['ingredientId']=='soup-bones' for h in after['history']))
+        self.page.evaluate('validateState(state)')
+        self.tab('market')
+        self.page.locator('[data-market-id=soup-bones] .market-add').click()
+        expect(self.page.locator('#reminder-dialog')).to_be_hidden()
+        self.assertTrue(any(i['id']=='soup-bones' for i in self.saved()['manual']))
+        self.assertNotIn('soup-bones',self.saved()['stock'])
+
+    def test_51_bone_split_reuses_an_existing_custom_soup_bone_identity(self):
+        self.page.evaluate("""()=>{
+            const soup=ingredient('soup-bones');soup.id='my-soup-bones';soup.name='汤骨';soup.art='jar';
+            ingredient('bones').name='排骨／煲汤骨';ingredient('bones').aliases=['排骨','汤骨','猪骨','煲汤骨'];
+            state.stock=['my-soup-bones'];state.manual=[{id:'my-soup-bones',note:'自己的汤骨'}];
+            state.catalogVersion=2026102001;persist();
+        }""")
+        self.page.reload()
+        self.assertEqual(self.page.evaluate("findIngredient('猪骨').id"),'my-soup-bones')
+        self.assertEqual(self.page.evaluate("findIngredient('排骨').id"),'bones')
+        self.assertEqual(self.saved()['stock'],['my-soup-bones'])
+        self.assertFalse(any(i['id']=='soup-bones' for i in self.saved()['ingredients']))
+        self.assertEqual(self.page.evaluate("ingredient('my-soup-bones').art"),'soup-bones')
+        self.page.evaluate('validateState(state)')
+
+    def test_52_basket_stages_follow_unique_items_not_purchase_checks(self):
+        self.tab('shopping')
+        top=self.page.locator('#shopping-overview').bounding_box()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','0')
+        self.tab('market')
+        for item in ['tomato','potato','carrot','radish']:
+            self.page.locator(f'[data-market-id={item}] .market-add').click()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','2')
+        expect(self.page.locator('#basket-peek')).to_have_attribute('data-stage','2')
+        expect(self.page.locator('#basket-peek-count')).to_have_text('4')
+        self.assertEqual(self.page.locator('#basket-peek .basket-peek-label').count(),0)
+        self.assertEqual(self.page.locator('.basket-flight').count(),0)
+        self.tab('shopping')
+        self.assertEqual(self.page.locator('#shopping-overview').bounding_box()['y'],top['y'])
+        self.page.locator('[data-grocery=tomato] .purchase-check').click()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','2')
+        expect(self.page.locator('#basket-progress')).to_have_attribute('aria-valuenow','1')
+        self.page.locator('[data-grocery=radish] [data-action=remove-manual]').click()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','1')
+        self.page.locator('#toast-undo').click()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','2')
+        self.page.evaluate("mutate(()=>state.manual=state.ingredients.slice(0,19).map(i=>({id:i.id,note:''})))")
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','7')
+        self.page.reload()
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','7')
+        self.page.evaluate('startNewTrip()')
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','0')
+        self.assertEqual(len(self.saved()['history']),1)
+
+    def test_53_flying_food_only_runs_after_confirmed_add_and_cleans_up(self):
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.tab('market')
+        self.page.locator('#market-search').fill('番茄')
+        self.page.locator('[data-market-id=tomato] .market-add').click()
+        expect(self.page.locator('.basket-flight')).to_be_attached()
+        expect(self.page.locator('.basket-flight')).to_have_attribute('aria-hidden','true')
+        expect(self.page.locator('#cart-feedback')).to_have_text('番茄已加入今天清单')
+        self.assertFalse(self.page.locator('#toast').evaluate("el=>el.classList.contains('show')"))
+        self.assertEqual(self.saved()['history'],[])
+        expect(self.page.locator('.basket-flight')).to_have_count(0)
+        self.page.locator('[data-market-id=tomato] .market-add').click()
+        expect(self.page.locator('#confirm-dialog')).to_be_visible()
+        self.assertEqual(self.page.locator('.basket-flight').count(),0)
+        self.page.keyboard.press('Escape')
+        self.page.evaluate("mutate(()=>state.stock=['yogurt'])")
+        self.page.locator('#market-search').fill('酸奶')
+        self.page.locator('[data-market-id=yogurt] .market-add').click()
+        expect(self.page.locator('#reminder-dialog')).to_be_visible()
+        self.assertEqual(self.page.locator('.basket-flight').count(),0)
+        self.page.locator('#reminder-items input[value=yogurt]').check()
+        self.page.locator('#reminder-continue').click()
+        expect(self.page.locator('.basket-flight')).to_be_attached()
+        self.tab('shopping')
+        expect(self.page.locator('.basket-flight')).to_have_count(0)
+        self.assertEqual(self.saved()['history'],[])
+        self.assertEqual(len(self.saved()['manual']),2)
+
+    def test_54_basket_animation_reverses_and_respects_motion_preference(self):
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.tab('shopping')
+        self.page.evaluate("mutate(()=>state.manual=state.ingredients.slice(0,13).map(i=>({id:i.id,note:''})))")
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-target-stage','5')
+        self.page.wait_for_timeout(320)
+        self.page.evaluate("mutate(()=>state.manual=state.manual.slice(0,1))")
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-target-stage','1')
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','1')
+        self.page.wait_for_timeout(300)
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','1')
+        before=self.saved()
+        self.page.locator('#trip-basket').click()
+        self.assertGreater(self.page.locator('#trip-basket .basket-frames').evaluate('el=>el.getAnimations().length'),0)
+        self.assertEqual(self.saved(),before)
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.evaluate("mutate(()=>state.manual=state.ingredients.slice(0,19).map(i=>({id:i.id,note:''})))")
+        expect(self.page.locator('#trip-basket')).to_have_attribute('data-stage','7')
+        self.assertEqual(self.page.locator('#trip-basket .basket-frames').evaluate('el=>el.getAnimations().length'),0)
+
+    def test_55_settings_has_one_entry_and_family_link_without_nested_dialogs(self):
+        self.tab('pantry')
+        self.assertEqual(self.page.locator('[data-action=data]').count(),1)
+        expect(self.page.locator('.backup-button use')).to_have_attribute('href','#i-settings')
+        self.page.get_by_role('button',name='设置与数据',exact=True).click()
+        expect(self.page.locator('#data-dialog')).to_be_visible()
+        expect(self.page.locator('#auto-reset-toggle')).to_be_visible()
+        expect(self.page.locator('[data-action=export]')).to_be_visible()
+        self.page.locator('.settings-family-row').click()
+        expect(self.page.locator('#data-dialog')).to_be_hidden()
+        expect(self.page.locator('#cloud-dialog')).to_be_visible()
+        self.assertEqual(self.page.locator('dialog[open]').count(),1)
+        self.page.keyboard.press('Escape')
+        self.assertEqual(self.page.locator('dialog[open]').count(),0)
+
+    def test_56_second_add_tap_confirms_removal_without_changing_screens(self):
+        self.tab('market')
+        self.page.locator('[data-market-id=tomato] .market-add').click()
+        self.page.locator('[data-market-id=tomato] .market-add').click()
+        expect(self.page.locator('#confirm-dialog')).to_be_visible()
+        self.assertTrue(self.page.locator('#market-view').is_visible())
+        before=self.saved()
+        self.page.keyboard.press('Escape')
+        self.assertEqual(self.saved(),before)
+        self.page.locator('[data-market-id=tomato] .market-add').click()
+        self.page.locator('#confirm-button').click()
+        self.assertEqual(self.saved()['manual'],[])
+        self.assertTrue(self.page.locator('#market-view').is_visible())
+        self.tab('recipes')
+        self.select('tomato-egg')
+        self.select('mince-rice')
+        self.select('tomato-egg')
+        expect(self.page.locator('#confirm-dialog')).to_be_visible()
+        self.page.keyboard.press('Escape')
+        self.assertIn('tomato-egg',self.saved()['selected'])
+        self.select('tomato-egg')
+        self.page.locator('#confirm-button').click()
+        self.assertEqual(self.saved()['selected'],['mince-rice'])
+        self.assertTrue(self.page.locator('#recipes-view').is_visible())
+        self.assertIn('garlic',self.page.evaluate('groceryData().list.map(i=>i.id)'))
+        self.assertNotIn('tomato',self.page.evaluate('groceryData().list.map(i=>i.id)'))
+        self.assertEqual(self.saved()['history'],[])
+
+
+    def test_57_instant_noodles_and_repainted_crackers_keep_existing_data(self):
+        self.tab('market')
+        self.page.locator('#market-search').fill('Maggie')
+        expect(self.page.locator('[data-market-id=instant-noodles] h3')).to_have_text('快熟面')
+        self.assertEqual(self.page.locator('.market-card').count(),1)
+        self.page.locator('[data-market-id=instant-noodles] .market-add').click()
+        self.assertEqual(self.saved()['stock'],[])
+        self.assertEqual(self.saved()['history'],[])
+        self.assertTrue(self.page.evaluate("longLasting(ingredient('instant-noodles'))"))
+        self.page.locator('#market-search').fill('')
+        self.buy_one('cream-crackers')
+        self.page.evaluate("""()=>{
+            const i=ingredient('instant-noodles');i.id='my-noodles';i.name='Maggi';i.art='jar';
+            state.manual=state.manual.map(m=>m.id==='instant-noodles'?{...m,id:'my-noodles'}:m);
+            state.catalogVersion=2026102002;persist();
+        }""")
+        before=self.saved()
+        self.page.reload()
+        after=self.saved()
+        for key in ['manual','trip','history','stock','levels','checked','checkLinks']:
+            self.assertEqual(after[key],before[key])
+        self.assertEqual(self.page.evaluate("findIngredient('快熟面').id"),'my-noodles')
+        self.assertEqual(self.page.evaluate("findIngredient('Maggie').id"),'my-noodles')
+        self.assertEqual(self.page.evaluate("ingredient('my-noodles').art"),'instant-noodles')
+        self.assertFalse(any(i['id']=='instant-noodles' for i in after['ingredients']))
+        self.page.evaluate('validateState(state)')
+        manifest=json.loads((ROOT/'assets/illustrations/manifest.json').read_text())
+        for key in ['instant-noodles','cream-crackers','milo','condensed-milk']:
+            asset=next(a for a in manifest['assets'] if a['key']==key and a['kind']=='ingredient')
+            self.assertTrue(asset['source'].endswith('ingredients-07.png'))
+
+
+    def test_58_category_selection_is_compact_without_shrinking_touch_targets(self):
+        self.tab('market')
+        for width in [320,390,430]:
+            self.page.set_viewport_size({'width':width,'height':844})
+            chip=self.page.locator('[data-action=market-filter][data-category=snacks]')
+            chip.click()
+            expect(chip).to_have_attribute('aria-pressed','true')
+            bounds=chip.bounding_box()
+            self.assertGreaterEqual(bounds['height'],44)
+            self.assertGreaterEqual(bounds['width'],44)
+            visual=chip.evaluate("el=>parseFloat(getComputedStyle(el,'::before').height)")
+            self.assertLessEqual(visual,38)
+            self.assertGreater(visual,30)
+            tools=self.page.locator('.market-display-tools').bounding_box()
+            self.assertGreaterEqual(tools['y']-(bounds['y']+bounds['height']),6)
+            self.assertFalse(self.page.evaluate('document.documentElement.scrollWidth>innerWidth'))
+        self.page.screenshot(path=str(RESULTS/'compact-category-430.png'))
 
 
 if __name__ == '__main__':
