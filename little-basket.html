@@ -642,14 +642,17 @@ function removePreviewItem(id){
  if(!$('#basket-preview-items [data-action="basket-remove"]'))$('#basket-preview [data-action="basket-full"]').focus({preventScroll:true});
  basketUndoCallback=()=>{basketUndoCallback=null;$('#basket-preview-undo').hidden=true;if(state.trip.id!==trip)return;mutate(()=>{state.trip.omitted=(state.trip.omitted||[]).filter(x=>x!==id);if(manual&&!state.manual.some(x=>x.id===id))state.manual.push(manual);});};$('#basket-preview-undo').hidden=false;
 }
+// Visible alpha bounds center each floating icon; the full-list basket keeps its fixed floor.
+const BASKET_ICON_OFFSETS=[[1.0,31.5],[9.0,31.0],[10.5,31.5],[3.5,28.5],[7.0,13.0],[4.5,9.5],[0.5,5.5],[8.5,0.0]];
 const BASKET_MOODS=['装一点期待','好吃的，安排','慢慢装起来','这趟挺丰盛','满满一篮香','再塞一小口','快变胖篮子了','胖乎乎，也兜得住'];
 const basketReducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 let basketStage=0,basketTargetStage=0,basketLayer=0,basketFrameTimer=null,basketLastCount=null,basketPop=null,basketTapSide=1;
 function showBasketStage(stage,animate){
  for(const selector of ['#trip-basket','#basket-peek']){
   const frames=$$(selector+' .basket-frame');
-  if(!animate){frames.forEach((frame,index)=>{frame.style.transition='none';$('use',frame).setAttribute('href','#food-decoration-basket-stage-'+stage);frame.style.opacity=index===basketLayer?'1':'0';});}
-  else{const next=1-basketLayer;$('use',frames[next]).setAttribute('href','#food-decoration-basket-stage-'+stage);frames.forEach(frame=>frame.style.transition='');frames[next].style.opacity='1';frames[basketLayer].style.opacity='0';}
+  const setArt=frame=>{$('use',frame).setAttribute('href','#food-decoration-basket-stage-'+stage);if(selector==='#basket-peek'){const [x,y]=BASKET_ICON_OFFSETS[stage];frame.setAttribute('viewBox',`${x} ${y} 360 300`);}};
+  if(!animate){frames.forEach((frame,index)=>{frame.style.transition='none';setArt(frame);frame.style.opacity=index===basketLayer?'1':'0';});}
+  else{const next=1-basketLayer;setArt(frames[next]);frames.forEach(frame=>frame.style.transition='');frames[next].style.opacity='1';frames[basketLayer].style.opacity='0';}
   $(selector).dataset.stage=stage;
  }
  if(animate)basketLayer=1-basketLayer;basketStage=stage;

@@ -151,6 +151,16 @@ def prepare(only=None):
         raise ValueError('Expected exactly one food asset block in app')
     keys = {kind: [item['key'] for item in metadata if item['kind'] == kind] for kind in ('dish', 'ingredient')}
     html = re.sub(r'const FOOD_IMAGES=.*?;', 'const FOOD_IMAGES=' + json.dumps(keys, separators=(',', ':')) + ';', html, count=1)
+    # Center the visible silhouette in the floating button; retain the fixed floor in the list.
+    basket_offsets = []
+    for stage in range(8):
+        asset = next(item for item in metadata if item['key'] == f'basket-stage-{stage}')
+        with Image.open(ROOT / asset['file']) as frame:
+            left, top, right, bottom = frame.convert('RGBA').getchannel('A').getbbox()
+            basket_offsets.append([(left + right - frame.width) / 2, (top + bottom - frame.height) / 2])
+    html, offset_count = re.subn(r'const BASKET_ICON_OFFSETS=.*?;', 'const BASKET_ICON_OFFSETS=' + json.dumps(basket_offsets, separators=(',', ':')) + ';', html, count=1)
+    if offset_count != 1:
+        raise ValueError('Expected the floating-basket alignment registry in app')
     app.write_text(html)
     # Normalize source locations so the pipeline works from a fresh checkout.
     (ASSETS / 'sources.json').write_text(json.dumps([{'key': spec['key'], 'path': str((ASSETS / 'source' / (spec['key'] + '.png')).relative_to(ROOT))} for spec in specs], indent=2) + '\n')
