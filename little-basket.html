@@ -72,12 +72,50 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 
 /* Quiet sorting below the categories: small text, with a full touch target. */
 .market-tools{flex-direction:column;align-items:flex-start;gap:0;margin-bottom:9px}.market-tools .market-filters{width:100%;flex:none}
-.market-sort-control{position:relative;width:100%;border:0;background:transparent;color:var(--muted);margin-left:0;z-index:6}
+.market-display-tools{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.market-sort-control{position:static;border:0;background:transparent;color:var(--muted);margin-left:0}
+.market-layout-switch{display:inline-flex;align-items:center;gap:0;flex-shrink:0}
+.market-layout-switch button{display:grid;place-items:center;width:44px;min-height:44px;padding:0;color:var(--muted);border-radius:10px}
+.market-layout-switch button:hover{color:var(--olive);background:var(--pale)}
+.market-layout-switch button[aria-pressed="true"]{color:var(--olive);background:var(--pale)}
+.market-layout-switch .icon{width:20px;height:20px;stroke-width:1.5}
+/* Navigation focus stays available to assistive technology without framing the whole page. */
+#main:focus{outline:none}
+summary:focus-visible{outline:3px solid #b9803b;outline-offset:4px}
+:where(button,a,input,select,textarea,summary,[tabindex]):focus:not(:focus-visible){outline:none}
+#market-content[data-columns="2"] .market-food .food-icon{width:64px;height:64px}
+#market-content[data-columns="2"] .market-card h3{font-size:15px;font-weight:600;min-height:30px;margin:7px 0 3px}
+#market-content[data-columns="2"] .market-status{min-height:30px;margin:3px 0 12px}
+#market-content[data-columns="3"] .market-food .food-icon{width:52px;height:52px}
+.kitchen-search-wrap{position:relative;margin-bottom:12px}
+.kitchen-search{display:block;max-width:none;width:100%}
+.kitchen-search input{background:var(--white);font-size:16px;padding-right:48px}
+.kitchen-search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.kitchen-search-clear{position:absolute;right:3px;top:1px;display:grid;place-items:center;width:44px;height:44px;color:var(--muted);border-radius:50%}
+.kitchen-search-clear:hover{background:var(--pale);color:var(--olive)}
+.kitchen-search-clear .icon{width:17px;height:17px}
+.kitchen-search-count{font-size:12px;color:var(--muted);margin:8px 2px 0}
+.kitchen-search-empty{margin-top:18px}
+.section-head .button{white-space:nowrap;flex-shrink:0}
+#market-content[data-columns="2"] .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#market-content[data-columns="3"] .market-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#market-content[data-columns="3"] .market-card{padding:14px 6px 8px;border-radius:15px}
+#market-content[data-columns="3"] .market-card h3{min-height:44px;margin:8px 0 3px;font-size:14px}
+#market-content[data-columns="3"] .market-status{min-height:38px;font-size:12px;line-height:1.5;overflow-wrap:anywhere;justify-content:center}
+#market-content[data-columns="3"] .market-add{font-size:12px;gap:3px;padding:5px 1px}
+#market-content[data-columns="3"] .market-add .icon{width:13px;height:13px}
+#market-content[data-columns="1"] .market-grid{grid-template-columns:minmax(0,1fr);gap:8px}
+#market-content[data-columns="1"] .market-card{display:grid;grid-template-columns:44px minmax(0,1fr) auto;column-gap:12px;row-gap:3px;padding:14px 12px;text-align:left;border-radius:15px}
+#market-content[data-columns="1"] .market-food{grid-column:1;grid-row:1 / 3;align-self:center}
+#market-content[data-columns="1"] .market-food .food-icon{width:44px;height:44px}
+#market-content[data-columns="1"] .market-card h3{grid-column:2;grid-row:1;display:block;align-self:end;min-height:0;margin:0;font-size:14px}
+#market-content[data-columns="1"] .market-status{grid-column:2;grid-row:2;display:block;align-self:start;min-height:0;margin:0;line-height:1.5;overflow-wrap:anywhere}
+#market-content[data-columns="1"] .market-add{grid-column:3;grid-row:1 / 3;align-self:center;width:auto;min-width:80px;margin:0;padding:8px 7px;font-size:12px}
 #market-sort{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;min-height:44px;width:96px;padding:8px 2px;font-size:13px;color:var(--muted);border-radius:8px}
 #market-sort>.icon{width:14px;height:14px;transition:transform .18s ease;transform:rotate(-90deg)}
 .market-sort-control.is-open #market-sort{color:var(--olive)}
 .market-sort-control.is-open #market-sort>.icon{transform:rotate(90deg)}
-.market-sort-options{position:absolute;left:100px;top:0;width:min(280px,calc(100% - 100px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:5px;background:var(--white);border:1px solid #c8d2b8;border-radius:14px;box-shadow:0 8px 24px #29372812;opacity:0;visibility:hidden;transform:translateX(-8px);pointer-events:none;transition:opacity .16s ease,transform .18s ease,visibility .18s}
+.market-sort-options{position:absolute;left:100px;top:0;z-index:6;width:min(280px,calc(100% - 100px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:5px;background:var(--white);border:1px solid #c8d2b8;border-radius:14px;box-shadow:0 8px 24px #29372812;opacity:0;visibility:hidden;transform:translateX(-8px);pointer-events:none;transition:opacity .16s ease,transform .18s ease,visibility .18s}
 .market-sort-control.is-open .market-sort-options{opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto}
 .sort-option{display:flex;align-items:center;justify-content:space-between;gap:3px;min-height:44px;min-width:0;padding:8px;border-radius:9px;font-size:13px;text-align:left;white-space:nowrap;color:var(--muted)}
 .sort-option .icon{width:13px;height:13px;flex-shrink:0;opacity:0}
@@ -111,26 +149,29 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 .brand-mark{background:transparent;border:0;border-radius:0;width:44px;height:44px}.brand-mark svg{width:44px;height:44px}.brand-name{font-weight:600;letter-spacing:.4px}.brand-en{text-transform:none;letter-spacing:.35px;font-size:10px}@media(max-width:350px){.brand-mark,.brand-mark svg{width:36px;height:36px}.brand-en{font-size:9px;letter-spacing:.2px}}
 .install-section{margin-top:24px;padding:18px;border:1px solid var(--line);border-radius:16px}.install-section h3,#install-instructions h3{font-size:16px;font-weight:600}.install-section p{margin:9px 0 14px}#install-instructions h3{margin:23px 0 10px}#install-instructions p,.install-steps{font-size:14px;line-height:1.9;color:var(--muted)}.install-steps{padding-left:22px}.install-steps li{padding-left:4px;margin:8px 0}#install-now{margin-top:15px}.hero-art{width:275px;height:160px;transform:translateX(-8px)}@media(max-width:760px){.hero-art{width:142px;height:116px;right:-4px;top:7px;transform:none}}@media(max-width:350px){.hero-art{width:118px;right:-3px;top:12px}}
 /* A reachable basket previews the trip without taking over shopping. */
-.basket-peek{position:fixed;right:max(20px,calc((100vw - 1280px)/2));bottom:24px;z-index:19;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:68px;min-height:68px;border-radius:22px;background:var(--white);color:var(--olive);box-shadow:0 5px 20px #29372820;font-size:12px;font-weight:600;touch-action:manipulation}
+.basket-peek{position:fixed;right:max(20px,calc((100vw - 1280px)/2));bottom:24px;z-index:19;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:68px;height:68px;min-height:44px;border-radius:22px;background:var(--white);color:var(--olive);box-shadow:0 5px 20px #29372820;font-size:12px;font-weight:600;touch-action:manipulation;transition:width .18s ease,height .18s ease,border-radius .18s ease}
 .basket-peek>.icon{width:29px;height:29px}.basket-peek-count{position:absolute;right:-3px;top:-5px;min-width:23px;height:23px;padding:0 5px;display:grid;place-items:center;border-radius:20px;background:var(--olive);color:var(--white);font-size:12px;border:2px solid var(--white);font-variant-numeric:tabular-nums}
 #market-view{padding-bottom:76px}
 #basket-preview{width:min(440px,calc(100% - 28px));max-height:min(75dvh,660px);padding:0;overflow:hidden}
 #basket-preview[open]{display:flex;flex-direction:column;animation:basket-reveal .18s ease-out}
-#basket-preview .dialog-head{flex-shrink:0;padding:19px 21px 13px}#basket-preview .dialog-head h2{font-size:20px}
-.basket-preview-summary{padding:0 21px 13px;color:var(--muted);font-size:13px;flex-shrink:0}
+#basket-preview .dialog-head{flex-shrink:0;padding:19px 21px 12px;background:var(--pale);border-bottom:0}#basket-preview .dialog-head h2{font-size:20px}
+#basket-preview .dialog-head .close-button{background:var(--white)}
+.basket-preview-summary{margin:0;padding:0 21px 16px;background:var(--pale);border-bottom:1px solid var(--line);color:var(--olive);font-size:13px;flex-shrink:0}
 .basket-preview-items{overflow-y:auto;overscroll-behavior:contain;padding:0 21px;min-height:0}
-.basket-preview-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.basket-preview-row>.food-icon{width:42px;height:42px;flex-shrink:0}
-.basket-preview-copy{min-width:0;flex:1}.basket-preview-copy strong{display:block;font-size:15px;font-weight:600;overflow-wrap:anywhere}.basket-preview-copy small{display:block;font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.basket-preview-row{display:grid;grid-template-columns:42px minmax(0,1fr) 44px;align-items:start;column-gap:12px;row-gap:0;padding:12px 0;border-top:1px solid var(--line)}.basket-preview-row:first-child{border-top:0}.basket-preview-row>.food-icon{width:42px;height:42px;flex-shrink:0}
+.basket-preview-copy{min-width:0;flex:1}.basket-preview-item-heading{display:flex;align-items:baseline;gap:8px;min-height:30px;padding-top:5px}.basket-preview-copy strong{display:block;flex:1;min-width:0;font-size:15px;font-weight:600;overflow-wrap:anywhere}.basket-preview-copy small{display:block;max-width:45%;font-size:12px;color:var(--muted);overflow-wrap:anywhere;text-align:right}
 .basket-preview-remove{display:grid;place-items:center;width:44px;height:44px;flex-shrink:0;border-radius:12px;color:#98534e}.basket-preview-remove:hover{background:#f5eae6}.basket-preview-remove .icon{width:17px;height:17px}
 .basket-preview-empty{padding:26px 0 35px;color:var(--muted);font-size:14px;line-height:1.8}
-.basket-preview-footer{padding:17px 21px 20px;flex-shrink:0;border-top:1px solid var(--line);background:var(--white)}.basket-preview-footer p{color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 13px}
+.basket-preview-footer{padding:16px 21px 18px;flex-shrink:0;border-top:1px solid var(--line);background:var(--white)}.basket-preview-footer p{color:var(--muted);font-size:12px;line-height:1.7;margin:10px 0 0;text-align:center}
+#basket-preview-undo{width:100%;background:var(--state-amber-bg);color:var(--state-amber);margin:0 0 12px!important}
 @keyframes basket-reveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:760px){.basket-peek{right:18px;bottom:calc(88px + env(safe-area-inset-bottom));width:64px;min-height:64px;border-radius:21px}#basket-preview{margin:auto auto max(12px,env(safe-area-inset-bottom));max-height:75dvh;border-radius:24px}.basket-preview-footer{padding-bottom:20px}}
-@media(prefers-reduced-motion:reduce){#basket-preview[open]{animation:none}}
+@media(max-width:760px){.basket-peek{right:18px;bottom:calc(88px + env(safe-area-inset-bottom));width:64px;height:64px;border-radius:21px}.basket-peek.is-compact{width:44px;height:44px;border-radius:15px}.basket-peek.is-compact>.icon{width:25px;height:25px}.basket-peek.is-compact>.basket-peek-label{display:none}.basket-peek.is-compact .basket-peek-count{min-width:20px;height:20px;font-size:11px}#basket-preview{margin:auto auto max(12px,env(safe-area-inset-bottom));max-height:75dvh;border-radius:24px}.basket-preview-footer{padding-bottom:20px}}
+@media(prefers-reduced-motion:reduce){#basket-preview[open]{animation:none}.basket-peek{transition:none}}
 @media print{.basket-peek,#basket-preview{display:none!important}}
 /* Notes stay secondary until someone chooses to edit them. */
 .grocery-row,.basket-preview-row{flex-wrap:wrap}
-.trip-item-note{flex-basis:100%;min-width:0;width:100%;padding-left:44px}.basket-preview-row .trip-item-note{padding-left:54px}
+.trip-item-note{flex-basis:100%;min-width:0;width:100%;padding-left:44px}.basket-preview-row .trip-item-note{grid-column:1 / -1;padding-left:0}
+.basket-preview-row .trip-item-note summary{padding-left:54px;color:var(--olive)}
 .trip-item-note summary,.trip-note summary{display:flex;align-items:center;gap:7px;min-height:44px;cursor:pointer;list-style:none;color:var(--muted);font-size:12px}
 .trip-item-note summary::-webkit-details-marker,.trip-note summary::-webkit-details-marker{display:none}.trip-item-note summary>.icon,.trip-note summary>.icon{width:14px;height:14px;flex-shrink:0}
 .note-summary-text{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.trip-item-note[open] summary,.trip-note[open] summary{color:var(--olive)}
@@ -138,6 +179,16 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 .trip-note{margin:0 0 20px;padding:2px 14px;background:var(--white);border:1px solid var(--line);border-radius:15px}.trip-note summary{font-size:14px}.trip-note-heading{flex-shrink:0;font-weight:550}.trip-note .note-summary-text{font-size:12px;margin-left:5px}.trip-note textarea{margin:0 0 12px;min-height:104px}
 @media(max-width:350px){.trip-note summary{flex-wrap:wrap;gap:5px}.trip-note .note-summary-text{flex-basis:100%;margin:0 0 8px 21px}}
 @media print{.trip-item-note summary,.trip-note summary{display:block}.trip-item-note textarea,.trip-note textarea{display:none}}
+.cloud-button-copy{display:flex;flex-direction:column;align-items:flex-start;line-height:1.35;gap:1px}.cloud-button-context{font-size:12px;font-weight:600}.cloud-button-context:not([hidden])+#cloud-button-label{font-size:11px}
+.family-link-panel{padding:17px;background:var(--pale);border-radius:16px;margin:16px 0}
+#cloud-connected .cloud-account{background:transparent;padding:0}
+.family-link-panel h3{font-size:16px;font-weight:600}.family-link-panel>p{font-size:13px;line-height:1.7;color:var(--muted);margin:6px 0 14px}
+.family-link-actions{display:flex;gap:8px;flex-wrap:wrap}.family-link-actions .primary{flex:1;min-width:130px}.family-link-actions .secondary{background:var(--white);flex-shrink:0}
+.family-link-panel .family-link-feedback{font-size:13px;color:var(--olive-dark);font-weight:550;margin:12px 0 0}
+.family-link-panel .family-link-feedback[data-kind="manual"]{color:var(--state-amber)}
+.family-link-panel .field{margin:13px 0 0}.family-link-panel input{min-width:0;width:100%;font-size:16px}
+.family-sync-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:15px 0}.family-sync-tools p{font-size:12px;color:var(--muted)}.family-sync-tools .button{flex-shrink:0}
+@media(max-width:350px){.family-link-actions .button{flex-basis:100%;width:100%}}
 </style>
 </head>
 <body>
@@ -227,7 +278,7 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 <div class="app">
 <header class="topbar">
  <button class="brand" data-action="view" data-view="market" aria-label="菜篮子首页"><span class="brand-mark"><svg viewBox="0 0 128 128" aria-hidden="true"><use href="#brand-basket"/></svg></span><span><span class="brand-name">菜篮子</span><span class="brand-en" style="display:block">Little Basket</span></span></button>
- <div class="top-actions"><span class="saved" id="save-status">已保存在这台设备</span><button class="quiet-btn cloud-button" id="cloud-button" data-action="cloud" aria-label="家庭同步"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg><span id="cloud-button-label">家庭同步</span></button><button class="quiet-btn backup-button" data-action="data" aria-label="备份与导入" title="备份与导入"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span class="backup-label">备份与导入</span></button></div>
+ <div class="top-actions"><span class="saved" id="save-status">已保存在这台设备</span><button class="quiet-btn cloud-button" id="cloud-button" data-action="cloud" aria-label="家庭同步"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg><span class="cloud-button-copy"><span class="cloud-button-context" id="cloud-button-context" hidden>家庭厨房</span><span id="cloud-button-label">家庭同步</span></span></button><button class="quiet-btn backup-button" data-action="data" aria-label="备份与导入" title="备份与导入"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span class="backup-label">备份与导入</span></button></div>
 </header>
 <section class="hero" id="hero" aria-labelledby="hero-title">
  <div class="hero-copy"><h1 id="hero-title">今天想煮什么？</h1><p id="hero-description">选好菜单，就知道这一趟买什么。</p></div>
@@ -236,7 +287,7 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 <div class="workspace">
  <main class="content" id="main" tabindex="-1">
   <nav class="desktop-tabs" aria-label="主要导航"><button class="tab" data-action="view" data-view="market"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>选购食材</button><button class="tab" data-action="view" data-view="shopping"><svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg>买菜清单<span class="count list-count">0</span></button><button class="tab active" data-action="view" data-view="recipes"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>我的菜谱</button><button class="tab" data-action="view" data-view="pantry"><svg class="icon" aria-hidden="true"><use href="#i-pantry"/></svg>小厨房</button></nav>
-  <section id="market-view" aria-labelledby="market-heading"><div class="section-head"><div><h1 id="market-heading">今天要补什么？</h1><p class="subtle" style="margin-top:5px">点一样入单，相同食材只记一行。</p></div><button class="button secondary" data-action="add-item"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>加新东西</button></div><label class="search market-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索选购食材</span><input id="market-search" type="search" placeholder="找食材、酱料、日用品" autocomplete="off"></label><div class="market-tools"><div class="market-filters" role="group" aria-label="选购分类" id="market-filters"></div><div class="market-sort-control"><button id="market-sort" type="button" aria-label="选购排序：默认分类" aria-haspopup="menu" aria-expanded="false" aria-controls="market-sort-options"><span id="market-sort-label">默认分类</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button><div id="market-sort-options" class="market-sort-options" role="menu" aria-label="选购排序" aria-hidden="true" inert><button class="sort-option" type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-sort-option="category">默认分类<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="name">名称排序<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="recent">最近购买<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="pantry">常备优先<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button></div></div></div><div id="market-content"></div></section>
+  <section id="market-view" aria-labelledby="market-heading"><div class="section-head"><div><h1 id="market-heading">今天要补什么？</h1><p class="subtle" style="margin-top:5px">点一样入单，相同食材只记一行。</p></div><button class="button secondary" data-action="add-item"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>加新东西</button></div><label class="search market-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索选购食材</span><input id="market-search" type="search" placeholder="找食材、酱料、日用品" autocomplete="off"></label><div class="market-tools"><div class="market-filters" role="group" aria-label="选购分类" id="market-filters"></div><div class="market-display-tools"><div class="market-sort-control"><button id="market-sort" type="button" aria-label="选购排序：默认分类" aria-haspopup="menu" aria-expanded="false" aria-controls="market-sort-options"><span id="market-sort-label">默认分类</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button><div id="market-sort-options" class="market-sort-options" role="menu" aria-label="选购排序" aria-hidden="true" inert><button class="sort-option" type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-sort-option="category">默认分类<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="name">名称排序<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="recent">最近购买<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button><button class="sort-option" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-sort-option="pantry">常备优先<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button></div></div><div class="market-layout-switch" role="group" aria-label="选购视图"><button type="button" data-action="market-layout" data-columns="1" aria-label="单列视图" title="单列视图" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="7" rx="1.2"/><rect x="3" y="14" width="18" height="7" rx="1.2"/></svg></button><button type="button" data-action="market-layout" data-columns="2" aria-label="双列视图" title="双列视图" aria-pressed="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg></button><button type="button" data-action="market-layout" data-columns="3" aria-label="三列视图" title="三列视图" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="4" height="4" rx=".7"/><rect x="10" y="3" width="4" height="4" rx=".7"/><rect x="17" y="3" width="4" height="4" rx=".7"/><rect x="3" y="10" width="4" height="4" rx=".7"/><rect x="10" y="10" width="4" height="4" rx=".7"/><rect x="17" y="10" width="4" height="4" rx=".7"/><rect x="3" y="17" width="4" height="4" rx=".7"/><rect x="10" y="17" width="4" height="4" rx=".7"/><rect x="17" y="17" width="4" height="4" rx=".7"/></svg></button></div></div></div><div id="market-content" data-columns="2"></div></section>
   <section id="recipes-view" aria-labelledby="recipes-heading" hidden>
    <div class="section-head"><div><h2 id="recipes-heading">我的菜谱</h2><p class="subtle" id="recipe-count" style="margin-top:4px"></p></div><button class="button secondary" id="add-recipe-button" data-action="new-recipe"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>添加菜谱</span></button></div>
    <div class="filters"><div class="chips" role="group" aria-label="菜谱分类"><button class="chip active" data-action="filter" data-filter="all" aria-pressed="true">全部</button><button class="chip" data-action="filter" data-filter="dish" aria-pressed="false">家常菜</button><button class="chip" data-action="filter" data-filter="soup" aria-pressed="false">煲汤</button><button class="chip" data-action="filter" data-filter="learning" aria-pressed="false">在学的</button></div><label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜索菜名或食材</span><input id="recipe-search" type="search" placeholder="搜菜名、食材" autocomplete="off"></label></div>
@@ -251,6 +302,7 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
   <section id="pantry-view" aria-labelledby="pantry-heading" hidden>
    <div class="section-head"><h1 id="pantry-heading">我的小厨房</h1><div class="kitchen-heading-actions"><button class="quiet-btn" data-action="data" aria-label="重置与备份" title="重置与备份"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span class="kitchen-backup-label">重置与备份</span></button><button class="button secondary" id="inventory-add" data-action="add-inventory" aria-label="添加库存"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>添加</button></div></div>
    <div class="kitchen-segments" role="group" aria-label="小厨房分类"><button class="active" data-action="kitchen-tab" data-kitchen="inventory" aria-pressed="true">常备余量</button><button data-action="kitchen-tab" data-kitchen="fresh" aria-pressed="false">生鲜库存</button><button data-action="kitchen-tab" data-kitchen="history" aria-pressed="false">30 天购买记录</button></div>
+   <div class="kitchen-search-wrap" id="kitchen-search-wrap"><label class="search kitchen-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only" id="kitchen-search-label">搜索常备余量</span><input id="kitchen-search" type="search" aria-labelledby="kitchen-search-label" aria-controls="pantry-content" placeholder="搜索常备品，如米、Milo" autocomplete="off" maxlength="100"></label><button class="kitchen-search-clear" type="button" data-action="clear-kitchen-search" aria-label="清空库存搜索" hidden><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><p class="kitchen-search-count" id="kitchen-search-count" role="status" hidden></p></div>
    <p class="pantry-intro" id="pantry-intro">调料还剩多少？滑一下记录。<br>余量大于零的调料，选菜时会自动略过。只有你调整或确认买新的一瓶，库存才变化。</p>
    <div id="pantry-content"></div>
   </section>
@@ -261,8 +313,8 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 </div>
 <nav class="mobile-nav" aria-label="手机主要导航"><button data-action="view" data-view="market"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>选购</span></button><button data-action="view" data-view="shopping"><svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg><span>清单</span><span class="count list-count">0</span></button><button class="active" data-action="view" data-view="recipes" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>菜谱</span></button><button data-action="view" data-view="pantry"><svg class="icon" aria-hidden="true"><use href="#i-pantry"/></svg><span>小厨房</span></button></nav>
 <dialog id="detail-dialog" aria-labelledby="detail-dialog-title"><div class="dialog-head"><h2 id="detail-dialog-title">厨房小笔记</h2><button class="close-button" data-action="close" aria-label="关闭菜谱"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body" id="detail-body"></div></dialog>
-<button id="basket-peek" class="basket-peek" data-action="basket-preview" aria-label="快速预览清单，待买 0 样" aria-haspopup="dialog" aria-controls="basket-preview" hidden><svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg><span>清单</span><span id="basket-peek-count" class="basket-peek-count" aria-hidden="true" hidden>0</span></button>
-<dialog id="basket-preview" aria-labelledby="basket-preview-title"><div class="dialog-head"><h2 id="basket-preview-title">这一趟的清单</h2><button class="close-button" data-action="close" aria-label="收起清单预览"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><p id="basket-preview-summary" class="basket-preview-summary"></p><div id="basket-preview-items" class="basket-preview-items"></div><div class="basket-preview-footer"><button id="basket-preview-undo" class="quiet-btn" data-action="basket-undo" style="min-height:44px;margin-bottom:8px" hidden>撤销上次移除</button><p>勾选已买、查看缺料，请进入完整清单。</p><button class="button primary full" data-action="basket-full">查看完整清单<svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg></button></div></dialog>
+<button id="basket-peek" class="basket-peek" data-action="basket-preview" aria-label="快速预览清单，待买 0 样" aria-haspopup="dialog" aria-controls="basket-preview" hidden><svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg><span class="basket-peek-label">清单</span><span id="basket-peek-count" class="basket-peek-count" aria-hidden="true" hidden>0</span></button>
+<dialog id="basket-preview" aria-labelledby="basket-preview-title"><div class="dialog-head"><h2 id="basket-preview-title">这一趟的清单</h2><button class="close-button" data-action="close" aria-label="收起清单预览"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><p id="basket-preview-summary" class="basket-preview-summary"></p><div id="basket-preview-items" class="basket-preview-items"></div><div class="basket-preview-footer"><button id="basket-preview-undo" class="quiet-btn" data-action="basket-undo" style="min-height:44px;margin-bottom:8px" hidden>撤销上次移除</button><button class="button primary full" data-action="basket-full">查看完整清单<svg class="icon" aria-hidden="true"><use href="#i-basket"/></svg></button><p>勾选已买、查看缺料，请进入完整清单。</p></div></dialog>
 <dialog id="editor-dialog" aria-labelledby="editor-title"><div class="dialog-head"><h2 id="editor-title">记一道新菜</h2><button class="close-button" data-action="close" aria-label="关闭编辑"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body"><form id="recipe-form">
  <input type="hidden" id="edit-recipe-id"><label class="field">菜名<input id="edit-title" required maxlength="60" placeholder="例如：小红书学的蒸排骨"></label>
  <label class="field">分类<select id="edit-type"><option value="dish">家常菜</option><option value="soup">煲汤</option></select></label>
@@ -279,8 +331,8 @@ input[type="checkbox"]:disabled{cursor:default;opacity:.55}
 <dialog id="cloud-dialog" aria-labelledby="cloud-title"><div class="dialog-head"><h2 id="cloud-title">一家人的小厨房</h2><button class="close-button" data-action="close" aria-label="关闭家庭同步"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body">
  <p class="cloud-intro">选购清单、库存余量和购买记录，全家一起接着用。打开家庭专属链接就能连接，这台浏览器会记住。</p>
  <div id="cloud-unconfigured" class="cloud-notice" hidden><strong>家庭云端还没接通</strong><p>目前记录仍保存在这台设备。完成首次云端设置并发布网页后，就能通过家庭专属链接一起用。</p></div>
- <section id="cloud-link-needed" class="cloud-notice" hidden><strong>连接我们家的厨房</strong><p>家庭专属链接是共享清单和库存的私人入口，相当于家门钥匙。已连接的设备点「分享给家人」就能取得。第一台设备使用创建厨房时保存的连接码。</p><form id="family-connect-form" style="margin-top:16px"><label class="field" for="family-connect-input">家庭链接或连接码<input id="family-connect-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="粘贴家人发来的链接，或首次连接码" maxlength="2048"></label><p id="family-connect-error" class="form-error" role="alert" hidden></p><button type="submit" class="button primary full">连接家庭厨房</button><p class="field-help" style="margin-top:10px">只需连接一次，不需要注册、邮箱或密码。请勿公开这个链接。</p></form></section>
- <section id="cloud-connected" hidden><div class="cloud-account"><span class="cloud-account-mark"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span><div><strong>我们家的菜篮子</strong><p id="cloud-status"></p></div></div><p id="cloud-last-sync" class="subtle" style="margin:12px 0 18px"></p><button class="button primary full" id="cloud-sync-now">立即同步</button><button class="button secondary full" id="cloud-share" style="margin-top:11px">分享给家人</button><label class="field" id="cloud-share-result" style="margin-top:16px" hidden>家庭专属链接<input id="cloud-share-link" readonly type="text" aria-label="家庭专属链接"><span class="field-help">长按复制。链接相当于家门钥匙，只分享给家人。</span></label><p class="field-help" style="margin-top:13px">修改会自动同步；断网时先暂存在本机，恢复网络后重试。家人同时修改时，会先让你确认保留哪份。</p></section>
+ <section id="cloud-link-needed" class="cloud-notice" hidden><strong>连接我们家的厨房</strong><p>家庭专属链接是共享清单和库存的私人入口，相当于家门钥匙。已连接的设备点「复制家庭链接」就能取得。第一台设备使用创建厨房时保存的连接码。</p><form id="family-connect-form" style="margin-top:16px"><label class="field" for="family-connect-input">家庭链接或连接码<input id="family-connect-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="粘贴家人发来的链接，或首次连接码" maxlength="2048"></label><p id="family-connect-error" class="form-error" role="alert" hidden></p><button type="submit" class="button primary full">连接家庭厨房</button><p class="field-help" style="margin-top:10px">只需连接一次，不需要注册、邮箱或密码。请勿公开这个链接。</p></form></section>
+ <section id="cloud-connected" hidden><div class="cloud-account"><span class="cloud-account-mark"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg></span><div><strong>我们家的菜篮子</strong><p id="cloud-status"></p></div></div><p id="cloud-last-sync" class="subtle" style="margin:12px 0 18px"></p><section class="family-link-panel" aria-labelledby="family-link-heading"><h3 id="family-link-heading">家庭专属链接</h3><p>家人打开即可加入，链接仅分享给家人。</p><div class="family-link-actions"><button class="button primary" id="cloud-copy">复制家庭链接</button><button class="button secondary" id="cloud-share">分享给家人</button></div><p class="family-link-feedback" id="cloud-link-feedback" role="status" hidden></p><label class="field" id="cloud-share-result" hidden>长按复制链接<input id="cloud-share-link" readonly type="text" aria-label="家庭专属链接"><span class="field-help">只发给家人，请勿公开。</span></label></section><div class="family-sync-tools"><p>记录会自动同步</p><button class="button secondary" id="cloud-sync-now">立即同步</button></div><p class="field-help" style="margin-top:13px">修改会自动同步；断网时先暂存在本机，恢复网络后重试。家人同时修改时，会先让你确认保留哪份。</p></section>
  <p id="cloud-message" class="cloud-notice" role="status" hidden></p>
  <section id="cloud-conflict" class="cloud-conflict" hidden><h3 id="cloud-conflict-title"></h3><p id="cloud-local-summary"></p><p id="cloud-remote-summary"></p><p class="field-help">尚未覆盖任何记录。选择后会下载被替换的一份 JSON 备份，也可先关闭，稍后处理。</p><button class="button primary full" id="cloud-use-remote" style="margin-top:16px">使用家庭厨房的记录</button><button class="button secondary full" id="cloud-keep-local" style="margin-top:11px">以本机为准，替换家庭记录</button></section>
  <button class="button secondary full" id="cloud-disconnect" style="margin-top:22px" hidden>断开这台设备的连接</button>
@@ -311,13 +363,13 @@ const CATEGORIES=[['produce','蔬菜水果'],['protein','肉类'],['dry','干货
 const I=(id,name,art,category,pantry=false,aliases=[])=>({id,name,art,category,pantry,aliases});
 const SEED_INGREDIENTS=[
  I('blueberry','蓝莓','blueberry','produce',false,['蓝梅']),I('grape','葡萄','grape','produce'),I('apple','苹果','apple','produce'),I('pineapple','黄梨','pineapple','produce',false,['菠萝','凤梨']),I('banana','香蕉','banana','produce'),I('strawberry','草莓','strawberry','produce'),I('cherry-tomato','小番茄／圣女果','cherry-tomato','produce',false,['小番茄','圣女果','小西红柿','小西红柿子','樱桃番茄']),
- {...I('milo','Milo 美禄','milo','snacks',true,['Milo','美禄','美禄粉']),lasting:true},{...I('condensed-milk','罐头炼奶','condensed-milk','snacks',true,['炼奶','炼乳','罐装炼奶']),lasting:true},{...I('cream-crackers','梳打饼','cream-crackers','snacks',true,['Hup Seng Cream Crackers','Hup Seng','Hup Seng 梳打饼','梳打饼','苏打饼','Cream Crackers']),lasting:true},
+ {...I('milo','Milo','milo','snacks',true,['Milo 美禄','美禄','美禄粉']),lasting:true},{...I('condensed-milk','炼奶','condensed-milk','snacks',true,['罐头炼奶','炼乳','罐装炼奶']),lasting:true},{...I('cream-crackers','梳打饼','cream-crackers','snacks',true,['Hup Seng Cream Crackers','Hup Seng','Hup Seng 梳打饼','梳打饼','苏打饼','Cream Crackers']),lasting:true},
  {...I('oats','燕麦','oats','dry',true,['燕麦片','即食燕麦','oatmeal','oats']),lasting:true},{...I('protein-powder','蛋白粉','protein-powder','snacks',true,['乳清蛋白粉','蛋白质粉','protein powder','whey']),lasting:true},
  I('tomato','番茄','tomato','produce',false,['西红柿']),I('potato','马铃薯','potato','produce',false,['土豆']),I('carrot','胡萝卜','carrot','produce',false,['红萝卜','红罗卜']),I('radish','白萝卜','radish','produce'),I('cress','西洋菜','greens','produce'),I('lotus','莲藕','lotus','produce'),I('sweet-leaves','薯苗／番薯叶','greens','produce',false,['树苗','薯苗','番薯叶','红薯叶','地瓜叶']),I('pea-shoots','豆苗','greens','produce'),
  I('scallion','葱','scallion','produce',true,['青葱','香葱']),I('ginger','姜','ginger','produce',true,['生姜']),I('garlic','蒜','garlic','produce',true,['大蒜','蒜头']),
  I('bones','排骨／煲汤骨','bones','protein',false,['排骨','煲汤骨','猪骨','猪骨头','汤骨','排骨 / 煲汤骨','排骨或煲汤骨']),I('egg','鸡蛋','egg','produce',true,['蛋']),I('mince','猪肉碎','meat','protein',false,['肉碎','猪绞肉','肉沫','肉末','猪肉沫','猪肉末']),I('belly','五花肉','meat','protein'),
  I('peanut','花生','peanut','dry'),I('rice','米','rice','dry',true,['白米','大米']),I('pickle','榨菜','pickle','dry'),
- I('oil','食用油','oil','seasoning',true,['油']),I('soy','生抽','bottle','seasoning',true),I('oyster','蚝油','bottle','seasoning',true),I('salt','盐','salt','seasoning',true,['食盐']),I('sugar','糖','sugar','seasoning',true,['白糖','砂糖']),I('beanpaste','豆瓣酱','jar','seasoning',true),I('plum','酸梅酱（苏州梅酱）','jar','seasoning',true,['酸梅酱','苏州梅酱','梅酱']),I('anise','八角','anise','seasoning',true)
+ I('oil','食用油','oil','seasoning',true,['油']),I('soy','生抽','bottle','seasoning',true),I('oyster','蚝油','bottle','seasoning',true),I('salt','盐','salt','seasoning',true,['食盐']),I('sugar','糖','sugar','seasoning',true,['白糖','砂糖']),I('beanpaste','豆瓣酱','jar','seasoning',true),I('plum','酸梅酱','jar','seasoning',true,['酸梅酱（苏州梅酱）','苏州梅酱','梅酱']),I('anise','八角','anise','seasoning',true)
 ];
 const A=(id,qty=null,unit='适量')=>({id,qty,unit});
 const R=(id,title,type,art,time,description,ingredients,steps,note='',origin='参考做法')=>({id,title,type,art,emoji:type==='soup'?'soup':'dish',time,description,servings:2,ingredients,steps,note,origin,learning:false,source:''});
@@ -472,6 +524,19 @@ function renderPlan(){
  const banner=$('#mobile-plan');banner.hidden=!state.selected.length;banner.innerHTML=`<div class="plan-text">已选 ${state.selected.length} 道菜<small>${state.servings} 人份 · ${remaining} 样食材待买</small></div><button data-action="view" data-view="shopping">去买菜 ${icon('basket')}</button>`;
 }
 let basketUndoCallback=null;
+let basketScrollAnchor=window.scrollY,basketScrollFrame=0;
+function restoreBasketPeek(){basketScrollAnchor=Math.max(0,window.scrollY);$('#basket-peek').classList.remove('is-compact');}
+function updateBasketPeek(){
+ const button=$('#basket-peek'),y=Math.max(0,window.scrollY);
+ if(activeView!=='market'||innerWidth>760||$('#basket-preview').open||button.matches(':focus-visible')){restoreBasketPeek();return;}
+ const atEnd=Math.ceil(y+innerHeight)>=document.documentElement.scrollHeight-4,delta=y-basketScrollAnchor;
+ if(y<=24||atEnd){restoreBasketPeek();return;}
+ if(Math.abs(delta)<24)return;
+ button.classList.toggle('is-compact',delta>0);basketScrollAnchor=y;
+}
+window.addEventListener('scroll',()=>{if(!basketScrollFrame)basketScrollFrame=requestAnimationFrame(()=>{basketScrollFrame=0;updateBasketPeek();});},{passive:true});
+window.addEventListener('resize',restoreBasketPeek);
+$('#basket-peek').addEventListener('focus',restoreBasketPeek);
 function itemNote(id){return state.trip.itemNotes?.find(entry=>entry.id===id)?.note||'';}
 function itemNoteEditor(id){return `<details class="trip-item-note" data-note-id="${esc(id)}"><summary>${icon('edit')}<span class="note-summary-text">${esc(itemNote(id).trim()||'添加备注')}</span></summary><textarea data-item-note="${esc(id)}" aria-label="${esc(ingredient(id).name)}的本次采购备注" maxlength="500" rows="2" placeholder="例如：挑熟一点，买小份">${esc(itemNote(id))}</textarea></details>`;}
 function tripNoteEditor(){return `<details class="trip-note"><summary>${icon('edit')}<span class="trip-note-heading">这一趟的备注</span><span class="note-summary-text">${esc(state.trip.note?.trim()||'点这里记一下')}</span></summary><textarea data-trip-note aria-label="这一趟的采购总备注" maxlength="2000" rows="3" placeholder="例如：今天去早市，顺路帮家里带些东西。">${esc(state.trip.note||'')}</textarea></details>`;}
@@ -480,7 +545,7 @@ function renderBasketPreview(){
  $('#basket-peek-count').textContent=pending.length>99?'99+':pending.length;$('#basket-peek-count').hidden=!pending.length;
  $('#basket-peek').setAttribute('aria-label',`快速预览清单，待买 ${pending.length} 样`);
  $('#basket-preview-summary').textContent=`${pending.length} 样待买${bought?` · ${bought} 样已买`:''} · 相同食材已合并`;
- $('#basket-preview-items').innerHTML=pending.length?pending.map(e=>`<div class="basket-preview-row" data-preview-id="${esc(e.id)}">${foodIcon(e.item.art,'food-icon',e.id)}<div class="basket-preview-copy"><strong>${esc(e.item.name)}</strong><small>${esc(e.amount||e.manualNote||'按需')}</small></div><button class="basket-preview-remove" data-action="basket-remove" data-id="${esc(e.id)}" aria-label="从本次清单移除${esc(e.item.name)}">${icon('close')}</button>${itemNoteEditor(e.id)}</div>`).join(''):`<p class="basket-preview-empty">${bought?'这一趟都买齐了，去完整清单看看。':'还没有待买的东西。<br>先选几样食材，再来看看。'}</p>`;
+ $('#basket-preview-items').innerHTML=pending.length?pending.map(e=>`<div class="basket-preview-row" data-preview-id="${esc(e.id)}">${foodIcon(e.item.art,'food-icon',e.id)}<div class="basket-preview-copy"><div class="basket-preview-item-heading"><strong>${esc(e.item.name)}</strong><small>${esc(e.amount||e.manualNote||'按需')}</small></div></div><button class="basket-preview-remove" data-action="basket-remove" data-id="${esc(e.id)}" aria-label="从本次清单移除${esc(e.item.name)}">${icon('close')}</button>${itemNoteEditor(e.id)}</div>`).join(''):`<p class="basket-preview-empty">${bought?'这一趟都买齐了，去完整清单看看。':'还没有待买的东西。<br>先选几样食材，再来看看。'}</p>`;
 }
 function removePreviewItem(id){
  const row=groceryData().list.find(e=>e.id===id&&!e.done);if(!row)return;
@@ -522,7 +587,7 @@ function setView(view,scroll=true){
  $('#hero-title').textContent=headings[view][0];$('#hero-description').textContent=headings[view][1];$('#hero').classList.toggle('compact',view!=='recipes');
  if(scroll){checkDailyReset();state.lastView=view;persist();window.scrollTo({top:0,behavior:'instant'});}
  // Keep keyboard focus in the current view without moving focus after every checkbox.
- if(scroll)$('#main').focus({preventScroll:true});
+ restoreBasketPeek();if(scroll)$('#main').focus({preventScroll:true});
 }
 function showDialog(el){if(!el.open)el.showModal();el.scrollTop=0;}
 function closeDialog(dialog){if(dialog.id==='editor-dialog'&&dirtyEditor){confirmAction('放弃这次修改？','这次还没保存的菜谱修改会丢失。',()=>{dirtyEditor=false;dialog.close();});return;}dialog.close();}
@@ -597,7 +662,11 @@ $('#item-form').addEventListener('submit',event=>{
  if(itemMode==='inventory'){
   mutate(()=>{if(isNew)state.ingredients.push(item);item.pantry=true;item.lasting=lasting;
    if(lasting){if(levelChanged)setLevel(item.id,level);}else{state.stock=state.stock.filter(x=>x!==item.id);if(have)state.stock.push(item.id);rememberStockEdit(item.id);if(!have)state.confirmedStock=state.confirmedStock.filter(x=>x!==item.id);}
-  });$('#item-dialog').close();kitchenTab=lasting?'inventory':'fresh';saveLocalView();renderKitchen();notify('已存到小厨房，没有加入购物清单');return;
+  });$('#item-dialog').close();kitchenTab=lasting?'inventory':'fresh';
+  const query=nameKey(kitchenSearch[kitchenTab]),hiddenBySearch=query&&![item.name,...item.aliases].some(label=>nameKey(label).includes(query));
+  if(hiddenBySearch)kitchenSearch[kitchenTab]='';saveLocalView();renderKitchen();
+  if(hiddenBySearch)$(`[data-pantry-id="${item.id}"]`)?.scrollIntoView({block:'nearest',behavior:'instant'});
+  notify(hiddenBySearch?'已存到小厨房；已清空搜索以显示该物品':'已存到小厨房，没有加入购物清单');return;
  }
  if(isNew){item.lasting=lasting;state.ingredients.push(item);}
  $('#item-dialog').close();
@@ -624,7 +693,7 @@ document.addEventListener('click',event=>{
  const button=event.target.closest('[data-action]');if(!button||button.disabled)return;
  const {action,id}=button.dataset;
  switch(action){
- case 'basket-preview':basketUndoCallback=null;$('#basket-preview-undo').hidden=true;renderBasketPreview();showDialog($('#basket-preview'));break;
+  case 'basket-preview':restoreBasketPeek();basketUndoCallback=null;$('#basket-preview-undo').hidden=true;renderBasketPreview();showDialog($('#basket-preview'));break;
  case 'basket-full':$('#basket-preview').close();setView('shopping');break;
  case 'basket-remove':removePreviewItem(id);break;
  case 'basket-undo':basketUndoCallback?.();$('#basket-preview [data-action="basket-full"]').focus({preventScroll:true});break;
@@ -644,8 +713,10 @@ document.addEventListener('click',event=>{
  notify(had&&action==='stock'?'已取消库存确认':`${ingredient(id).name}家里有，清单会略过`,()=>{mutate(()=>{state.stock=previous.stock;state.manual=previous.manual;state.levels=previous.levels;state.confirmedStock=previous.confirmedStock;state.stockEdits=previous.stockEdits;});state.checked=previous.checked.filter(x=>groceryData().list.some(e=>e.id===x));persist();render();});break;}
  case 'need':mutate(()=>{state.stock=state.stock.filter(x=>x!==id);state.confirmedStock=state.confirmedStock.filter(x=>x!==id);if(longLasting(ingredient(id)))setLevel(id,0);});notify('已放回买菜清单');break;
  case 'replenish':case 'market-add':if(groceryData().list.some(e=>e.id===id)){setView('shopping');notify('已经在清单里，买到后勾选就好。');break;}requestAddition([id],()=>{mutate(()=>addManual(id));notify(`${ingredient(id).name}已加入今天清单`);},{manual:true});break;
- case 'market-filter':marketCategory=button.dataset.category;renderMarket();break;
- case 'kitchen-tab':kitchenTab=button.dataset.kitchen;saveLocalView();renderKitchen();break;
+  case 'market-filter':marketCategory=button.dataset.category;renderMarket();break;
+  case 'market-layout':{const columns=Number(button.dataset.columns);if(![1,2,3].includes(columns))break;marketColumns=columns;closeMarketSort();saveViewPreferences();renderMarket();break;}
+  case 'kitchen-tab':kitchenTab=button.dataset.kitchen;saveLocalView();renderKitchen();break;
+  case 'clear-kitchen-search':kitchenSearch[kitchenTab]='';saveLocalView();renderKitchen();$('#kitchen-search').focus({preventScroll:true});break;
  case 'remove-manual':{const old=state.manual.find(x=>x.id===id);mutate(()=>state.manual=state.manual.filter(x=>x.id!==id));notify('已移出这趟清单',()=>mutate(()=>state.manual.push(old)));break;}
  case 'variant':{const variantId=button.dataset.variant;const apply=()=>{mutate(()=>{state.variants=state.variants.filter(x=>x.recipeId!==id);state.variants.push({recipeId:id,variantId});});showDetail(id);};if(state.selected.includes(id))requestAddition(recipe(id).variants.find(v=>v.id===variantId).ingredients.map(a=>a.id),apply);else apply();break;}
  case 'learning':mutate(()=>recipe(id).learning=!recipe(id).learning);showDetail(id);break;
@@ -687,10 +758,12 @@ const DAY_MS=86400000;
 const LOCAL_VIEW_KEY='little-basket:local-view:v1';
 let localView=null;try{const value=JSON.parse(sessionStorage.getItem(LOCAL_VIEW_KEY)||'null');if(value&&['market','recipes','shopping','pantry'].includes(value.view))localView=value;}catch{}
 let marketSearch='',marketCategory='all',kitchenTab=localView?.view==='pantry'&&['inventory','fresh','history'].includes(localView.kitchenTab)?localView.kitchenTab:'inventory',pendingAddition=null;
-function saveLocalView(view=activeView){try{sessionStorage.setItem(LOCAL_VIEW_KEY,JSON.stringify({view,kitchenTab}));}catch{}}
-let marketSort='category',historySort='newest';
-try{const prefs=JSON.parse(localStorage.getItem('little-basket:preferences:v1')||'{}');if(['category','name','recent','pantry'].includes(prefs.marketSort))marketSort=prefs.marketSort;if(['newest','oldest'].includes(prefs.historySort))historySort=prefs.historySort;}catch{}
-function saveViewPreferences(){try{localStorage.setItem('little-basket:preferences:v1',JSON.stringify({marketSort,historySort}));}catch{}}
+const kitchenSearch={inventory:'',fresh:''};
+for(const tab of ['inventory','fresh'])if(typeof localView?.kitchenSearch?.[tab]==='string')kitchenSearch[tab]=localView.kitchenSearch[tab].slice(0,100);
+function saveLocalView(view=activeView){try{sessionStorage.setItem(LOCAL_VIEW_KEY,JSON.stringify({view,kitchenTab,kitchenSearch}));}catch{}}
+let marketSort='category',historySort='newest',marketColumns=2;
+try{const prefs=JSON.parse(localStorage.getItem('little-basket:preferences:v1')||'{}');if(['category','name','recent','pantry'].includes(prefs.marketSort))marketSort=prefs.marketSort;if(['newest','oldest'].includes(prefs.historySort))historySort=prefs.historySort;if([1,2,3].includes(prefs.marketColumns))marketColumns=prefs.marketColumns;}catch{}
+function saveViewPreferences(){try{localStorage.setItem('little-basket:preferences:v1',JSON.stringify({marketSort,historySort,marketColumns}));}catch{}}
 
 function dayKey(date=new Date()){return new Intl.DateTimeFormat('en-CA',{timeZone:KITCHEN_ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).format(date);}
 function dateLabel(date){return new Intl.DateTimeFormat('zh-CN',{timeZone:KITCHEN_ZONE,month:'long',day:'numeric',weekday:'short'}).format(new Date(date));}
@@ -727,6 +800,8 @@ function augmentState(saved){
  // Keep the existing egg identity and records while moving its grocery section.
  const egg=next.ingredients.find(i=>i.id==='egg');if(egg)egg.category='produce';
  const crackers=next.ingredients.find(i=>i.id==='cream-crackers'||i.art==='cream-crackers');if(crackers?.name==='Hup Seng 梳打饼'){crackers.name='梳打饼';crackers.aliases=[...new Set([...crackers.aliases,'Hup Seng 梳打饼'])];}
+ const renamedNames={'酸梅酱（苏州梅酱）':'酸梅酱','罐头炼奶':'炼奶','Milo 美禄':'Milo'};
+ for(const i of next.ingredients)if(Object.hasOwn(renamedNames,i.name)){const previous=i.name;i.name=renamedNames[previous];i.aliases=[...new Set([...i.aliases,previous])].filter(alias=>alias!==i.name);}
  if(!next.ingredients.some(i=>i.id==='cooking-wine'))next.ingredients.push(I('cooking-wine','料酒','bottle','seasoning',true,['烹饪酒']));
  for(const r of SEED_RECIPES){const at=next.recipes.findIndex(old=>old.id===r.id);if(at<0)next.recipes.push(structuredClone(r));else if(needsSeedRefresh&&next.recipes[at].origin!=='我的厨房笔记')next.recipes[at]={...structuredClone(r),learning:next.recipes[at].learning};}
  next.catalogVersion=Math.max(saved.catalogVersion||0,CATALOG_VERSION);
@@ -857,6 +932,8 @@ function checkDailyReset(){
  }return false;
 }
 function renderMarket(){
+ $('#market-content').dataset.columns=String(marketColumns);
+ $$('[data-action="market-layout"]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.columns)===marketColumns)));
  const sortLabel=({category:'默认分类',name:'名称排序',recent:'最近购买',pantry:'常备优先'})[marketSort];
  $('#market-sort-label').textContent=sortLabel;$('#market-sort').setAttribute('aria-label','选购排序：'+sortLabel);
  $$('[data-sort-option]').forEach(button=>button.setAttribute('aria-checked',String(button.dataset.sortOption===marketSort)));
@@ -912,9 +989,17 @@ function commitFreshSlider(input){
 }
 function renderKitchen(){
  $$('.kitchen-segments button').forEach(b=>{const on=b.dataset.kitchen===kitchenTab;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});
- $('#inventory-add').hidden=kitchenTab==='history';$('#pantry-intro').hidden=kitchenTab==='history';$('#pantry-intro').textContent=kitchenTab==='fresh'?'生鲜用三档记库存：用完了、还有、很多。滑动或点文字选择；七天内买过的，再入单时会提醒确认。':'米、食油、燕麦、冲饮等常备品，滑一下记余量。选菜会略过还有存货的食材，不会自动扣库存。';
+ $('#inventory-add').hidden=kitchenTab==='history';$('#pantry-intro').hidden=kitchenTab==='history';$('#pantry-intro').textContent=kitchenTab==='fresh'?'滑动或点选三档库存；近七天买过，再入单时会提醒。':'手动记录余量；选菜会略过还有存货的常备品。';
+ $('#kitchen-search-wrap').hidden=kitchenTab==='history';
  if(kitchenTab==='history'){renderHistory();return;}
- const items=state.ingredients.filter(i=>(i.pantry||state.stock.includes(i.id)||state.levels.some(l=>l.id===i.id)||recentPurchase(i.id,30))&&(kitchenTab==='fresh'?!longLasting(i):longLasting(i)));
+ const searchInput=$('#kitchen-search'),text=kitchenSearch[kitchenTab],query=nameKey(text);
+ if(searchInput.value!==text)searchInput.value=text;
+ searchInput.placeholder=kitchenTab==='fresh'?'搜索生鲜，如鸡蛋、葱':'搜索常备品，如米、Milo';
+ $('#kitchen-search-label').textContent=kitchenTab==='fresh'?'搜索生鲜库存':'搜索常备余量';
+ $('.kitchen-search-clear').hidden=!text;
+ const items=state.ingredients.filter(i=>(i.pantry||state.stock.includes(i.id)||state.levels.some(l=>l.id===i.id)||recentPurchase(i.id,30))&&(kitchenTab==='fresh'?!longLasting(i):longLasting(i))&&(!query||[i.name,...i.aliases].some(label=>nameKey(label).includes(query))));
+ $('#kitchen-search-count').hidden=!query;$('#kitchen-search-count').textContent=`找到 ${items.length} 样`;
+ if(!items.length){$('#pantry-content').innerHTML=query?`<div class="empty kitchen-search-empty"><h3>没有找到「${esc(text.trim())}」</h3><p>这里只搜索已加入这个分区的物品。换个名称试试，或清空搜索查看全部。</p><button class="button secondary" data-action="clear-kitchen-search">清空搜索</button></div>`:`<div class="empty"><h3>${kitchenTab==='fresh'?'还没有生鲜库存':'还没有常备品'}</h3><p>点「添加」记下家里的物品；不会生成购买记录。</p><button class="button secondary" data-action="add-inventory">添加库存</button></div>`;return;}
  const kitchenCategories=kitchenTab==='inventory'?[CATEGORIES.find(c=>c[0]==='seasoning'),...CATEGORIES.filter(c=>c[0]!=='seasoning')]:CATEGORIES;
  $('#pantry-content').innerHTML=kitchenCategories.map(([id,label])=>{const rows=items.filter(i=>i.category===id);if(!rows.length)return '';return `<section class="grocery-group"><h3 class="group-heading">${label}</h3><div class="inventory-list">${rows.map(i=>{
   const has=state.stock.includes(i.id),long=longLasting(i),level=levelOf(i.id),known=state.levels.some(l=>l.id===i.id),last=recentPurchase(i.id,30),fresh=freshStock(i.id);
@@ -931,7 +1016,7 @@ function renderHistory(){
   return `<section class="history-day"><h3>${dateLabel(events[0].boughtAt)}</h3><div class="history-rows">${events.map(p=>{const i=ingredient(p.ingredientId);return `<div class="history-row" data-purchase-id="${esc(p.id)}">${foodIcon(i.art,'food-icon',i.id)}<span class="history-item-name">${esc(i.name)}</span><small>${esc(p.amount)}</small><button class="history-delete" data-action="delete-purchase" data-id="${esc(p.id)}" aria-label="删除${esc(i.name)}这笔购买记录">${icon('trash')}</button></div>`;}).join('')}</div></section>`;
  }).join('');
 }
-$('#item-category').addEventListener('change',event=>{if(!findIngredient($('#item-name').value))$('#item-lasting').checked=event.target.value==='seasoning';updateItemMode();});
+$('#item-category').addEventListener('change',event=>{if(itemMode!=='inventory'&&!findIngredient($('#item-name').value))$('#item-lasting').checked=event.target.value==='seasoning';updateItemMode();});
 function closeMarketSort(restoreFocus=false){
  const control=$('.market-sort-control'),menu=$('#market-sort-options');
  if($('#market-sort').getAttribute('aria-expanded')!=='true')return;
@@ -969,6 +1054,9 @@ $('.market-sort-control').addEventListener('focusout',event=>{if(!event.currentT
 document.addEventListener('pointerdown',event=>{if(!event.target.closest('.market-sort-control'))closeMarketSort();});
  document.addEventListener('change',event=>{if(event.target.id==='history-sort'){historySort=event.target.value;saveViewPreferences();renderHistory();$('#history-sort').focus({preventScroll:true});}});
  $('#market-search').addEventListener('input',event=>{marketSearch=event.target.value.trim();renderMarket();});
+function filterKitchen(event){if(event.isComposing||!['inventory','fresh'].includes(kitchenTab))return;kitchenSearch[kitchenTab]=event.target.value.slice(0,100);saveLocalView();renderKitchen();}
+$('#kitchen-search').addEventListener('input',filterKitchen);
+$('#kitchen-search').addEventListener('compositionend',filterKitchen);
 $('#pantry-content').addEventListener('input',event=>{
  if(event.target.matches('.fresh-slider')){paintFreshSlider(event.target);return;}
  if(!event.target.matches('.inventory-slider'))return;
@@ -1086,10 +1174,12 @@ class KitchenCloud{
   const configured=isCloudConfigured(),connected=Boolean(this.connection),status=this.status();
   const colorState=!configured||!connected?'disconnected':this.expired||this.conflict||this.phase==='error'?'error':this.busy||this.phase==='connecting'?'syncing':this.phase==='offline'||this.dirty()?'pending':'synced';
   $('#cloud-button').dataset.status=colorState;$('#cloud-connected').dataset.status=colorState;$('#cloud-button use').setAttribute('href',colorState==='synced'?'#i-check':colorState==='error'?'#i-alert':'#i-cloud');
-  $('#cloud-button-label').textContent=connected?status:'家庭同步';$('#cloud-button').setAttribute('aria-label','家庭同步：'+status);
+  $('#cloud-button-context').hidden=!connected;$('#cloud-button-label').textContent=connected?status:'家庭同步';$('#cloud-button').setAttribute('aria-label','家庭同步：'+status);
+  $('.cloud-intro').textContent=connected?'记录会自动同步，家人打开专属链接就能一起用。':'选购清单、库存余量和购买记录，全家一起接着用。打开家庭专属链接就能连接，这台浏览器会记住。';
   $('#cloud-disconnect').hidden=!connected;$('#cloud-unconfigured').hidden=configured;$('#cloud-link-needed').hidden=!configured||connected;$('#cloud-connected').hidden=!configured||!connected;
   $('#cloud-message').textContent=this.message;$('#cloud-message').hidden=!this.message;$('#cloud-conflict').hidden=!this.conflict;
-  $('#cloud-share').disabled=!this.adopted||this.expired;$('#cloud-disconnect').disabled=this.busy;
+  const canShare=connected&&this.adopted&&!this.expired;$('#cloud-share').disabled=!canShare;$('#cloud-copy').disabled=!canShare;$('#cloud-disconnect').disabled=this.busy;
+  if(!canShare){$('#cloud-share-result').hidden=true;$('#cloud-share-link').value='';$('#cloud-link-feedback').hidden=true;$('#cloud-link-feedback').textContent='';}
   if(connected){
    $('#cloud-status').textContent=status;
    $('#cloud-last-sync').textContent=this.lastSync?'上次同步：'+new Intl.DateTimeFormat('zh-CN',{timeZone:KITCHEN_ZONE,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date(this.lastSync)):'正在连接家庭的小厨房。';
@@ -1174,10 +1264,17 @@ class KitchenCloud{
   }catch(error){if(error.kind==='conflict'){try{this.setConflict(await this.getRow(true));}catch(next){this.failure(next);}}else this.failure(error);}
   finally{this.busy=false;this.paint();if(!this.conflict&&this.phase==='ready'&&this.dirty())this.localChanged();}
  }
+ familyLink(){return this.connection&&this.adopted&&!this.expired?location.origin+location.pathname+'#family='+this.connection.accessKey:'';}
+ linkFeedback(message,kind='success'){const feedback=$('#cloud-link-feedback');feedback.textContent=message;feedback.dataset.kind=kind;feedback.hidden=false;}
+ async copyLink(){
+  const link=this.familyLink();if(!link)return;
+  try{if(!navigator.clipboard?.writeText)throw new Error('manual');await navigator.clipboard.writeText(link);if(this.familyLink()!==link)return;$('#cloud-share-result').hidden=true;$('#cloud-share-link').value='';this.linkFeedback('已复制，可以粘贴发给家人。');}
+  catch{if(this.familyLink()!==link)return;$('#cloud-share-result').hidden=false;$('#cloud-share-link').value=link;$('#cloud-share-link').focus({preventScroll:true});$('#cloud-share-link').select();this.linkFeedback('浏览器未允许自动复制，请长按下方链接复制。','manual');}
+ }
  async share(){
-  if(!this.adopted||this.expired)return;const link=location.origin+location.pathname+'#family='+this.connection.accessKey;
-  try{if(navigator.share){await navigator.share({title:'我们家的菜篮子',text:'打开后就能一起买菜。这个专属链接只分享给家人。',url:link});return;}if(navigator.clipboard){await navigator.clipboard.writeText(link);notify('家庭链接已复制，只分享给家人');return;}}catch(error){if(error.name==='AbortError')return;}
-  $('#cloud-share-result').hidden=false;$('#cloud-share-link').value=link;$('#cloud-share-link').select();
+  const link=this.familyLink();if(!link)return;
+  if(navigator.share){try{await navigator.share({title:'我们家的菜篮子',text:'打开后就能一起买菜。这个专属链接只分享给家人。',url:link});if(this.familyLink()===link)this.linkFeedback('分享已交给系统，请只发给家人。');return;}catch(error){if(error.name==='AbortError'){if(this.familyLink()===link)this.linkFeedback('已取消分享，家庭连接不受影响。');return;}}}
+  if(this.familyLink()===link)await this.copyLink();
  }
  disconnect(){
   if(!this.connection||this.busy)return;persistLocalOnly();clearTimeout(this.timer);this.connection=null;this.conflict=null;this.expired=false;this.baseState=null;this.baseRevision=0;this.initialized=false;this.adopted=false;this.phase='guest';this.message='这台设备已断开家庭连接，家人的设备不受影响。';
@@ -1191,6 +1288,7 @@ $('#cloud-sync-now').addEventListener('click',()=>cloudEngine.sync());
 $('#cloud-keep-local').addEventListener('click',()=>cloudEngine.resolve(true));
 $('#cloud-use-remote').addEventListener('click',()=>cloudEngine.resolve(false));
 $('#cloud-share').addEventListener('click',()=>cloudEngine.share());
+$('#cloud-copy').addEventListener('click',()=>cloudEngine.copyLink());
 $('#cloud-disconnect').addEventListener('click',()=>confirmAction('断开这台设备的家庭连接？','家人的设备不受影响。重新打开家庭专属链接即可接回；未同步记录会保存在本机的独立缓存。',()=>cloudEngine.disconnect()));
 
 // Each tab is an app screen; never rely on a running server or remote assets.

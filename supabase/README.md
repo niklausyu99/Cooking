@@ -10,7 +10,7 @@
 4. [site-config.json](../site-config.json) 已填入你提供的 Project URL 和 Publishable key；这是允许出现在前端的公开配置，不包含家庭权限。环境变量 `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY` 可覆盖它。切勿使用 Secret key、service_role 或数据库密码。
 5. 在 GitHub 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。合并或推送到 `main` 后运行 **Publish Little Basket**。只上传 `dist/` 内两个 HTML、`.nojekyll`、manifest、service worker 和安装图标，不上传设计工具、SQL 或项目文档。GitHub Free 的 Pages 对公开仓库免费；若仓库为私有且当前套餐不支持 Pages，可改用支持私有仓库的免费静态托管，不要为此擅自公开仓库。
 6. 也可直接在 App「家庭同步」粘贴初始化时自己保存的连接码，无需手工拼网址。部署成功后，使用 GitHub Pages 实际显示的网站地址，并在末尾加 `#family=你的连接码`。例如 `https://你的站点/#family=64位连接码`；若已有路径，保留路径。第一次用完整链接打开后会自动连接并记住浏览器，验证成功会移除地址栏中的连接码。
-7. App 顶部 **家庭同步 → 分享给家人** 会生成完整专属链接。家人点击即进入，没有邮箱、注册和密码步骤。普通网站地址在未连接的设备只提供本机模式，不能读取家庭记录。
+7. 已连接后，App 顶部 **家庭厨房 → 复制家庭链接** 可取得完整专属链接，也可点「分享给家人」调用系统分享。复制成功会在面板内提示；浏览器不允许自动复制时显示可长按复制的链接。家人点击即进入，没有邮箱、注册和密码步骤。普通网站地址在未连接的设备只提供本机模式，不能读取家庭记录。
 
 手机使用浏览器打开实际 HTTPS 网站，可添加至主屏幕。不要用手机系统的 HTML 文件预览器。应用打开后断网仍可操作，恢复网络会补传；正式构建使用 service worker 缓存公开页面，首次完整联网加载后支持断网重开。缓存不包含 Supabase 请求或家庭密钥。iPhone 用 Safari 分享→添加到主屏幕，保持「作为网页 App 打开」（如有）；Android 用 Chrome 安装。安装后若没有继承浏览器连接，在独立 App 的「家庭同步」粘贴家庭链接或初始连接码一次。安装本身不授予家庭数据访问权。
 

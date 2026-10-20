@@ -325,5 +325,58 @@ class FamilySyncTests(unittest.TestCase):
 
 
 
+    def test_family_link_copy_is_visible_reports_success_and_does_not_sync(self):
+        page = self.device()
+        self.ready(page)
+        expect(page.locator('#cloud-button-context')).to_have_text('家庭厨房')
+        before = copy.deepcopy(self.db[KEY_A])
+        page.locator('#cloud-button').click()
+        expect(page.get_by_role('heading', name='家庭专属链接', exact=True)).to_be_visible()
+        expect(page.locator('#cloud-copy')).to_be_in_viewport()
+        page.evaluate("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>window.copiedFamilyLink=value}})")
+        page.locator('#cloud-copy').click()
+        expect(page.locator('#cloud-link-feedback')).to_have_text('已复制，可以粘贴发给家人。')
+        self.assertEqual(page.evaluate('window.copiedFamilyLink'), URL + '#family=' + KEY_A)
+        expect(page.locator('#cloud-share-result')).to_be_hidden()
+        self.assertNotIn(KEY_A, page.evaluate('JSON.stringify(state)'))
+        self.assertEqual(page.evaluate('location.hash'), '')
+        self.assertEqual(self.db[KEY_A], before)
+
+    def test_family_link_manual_copy_and_cancelled_native_share(self):
+        page = self.device()
+        self.ready(page)
+        page.locator('#cloud-button').click()
+        page.evaluate("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new DOMException('denied','NotAllowedError')}}})")
+        page.locator('#cloud-copy').click()
+        expect(page.locator('#cloud-share-link')).to_have_value(URL + '#family=' + KEY_A)
+        expect(page.locator('#cloud-share-link')).to_have_attribute('readonly', '')
+        expect(page.locator('#cloud-share-link')).to_be_focused()
+        expect(page.locator('#cloud-link-feedback')).to_contain_text('请长按下方链接复制')
+        page.evaluate("Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('cancelled','AbortError')}})")
+        page.locator('#cloud-share').click()
+        expect(page.locator('#cloud-link-feedback')).to_have_text('已取消分享，家庭连接不受影响。')
+        expect(page.locator('#cloud-dialog')).to_be_visible()
+        self.ready(page)
+        page.evaluate("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>window.copiedFamilyLink=value}})")
+        page.locator('#cloud-copy').click()
+        expect(page.locator('#cloud-share-result')).to_be_hidden()
+        expect(page.locator('#cloud-share-link')).to_have_value('')
+
+    def test_revoked_family_link_clears_manual_fallback_and_disables_copy(self):
+        page = self.device()
+        self.ready(page)
+        page.locator('#cloud-button').click()
+        page.evaluate("Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined})")
+        page.locator('#cloud-copy').click()
+        expect(page.locator('#cloud-share-result')).to_be_visible()
+        del self.db[KEY_A]
+        self.sync(page)
+        expect(page.locator('#cloud-copy')).to_be_disabled()
+        expect(page.locator('#cloud-share')).to_be_disabled()
+        expect(page.locator('#cloud-share-result')).to_be_hidden()
+        expect(page.locator('#cloud-share-link')).to_have_value('')
+        expect(page.locator('#cloud-link-feedback')).to_be_hidden()
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
